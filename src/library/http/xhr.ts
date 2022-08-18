@@ -1,9 +1,11 @@
-import { api } from '@/consts/envs'
+import env from '@/env'
 import type { Method } from '@/library/http'
 import XhrPromise from '@/library/http/xhrPromise'
 import type Url from '@/types/url'
 import type { LocationQueryRaw } from 'vue-router'
 import query from '@/library/query'
+
+const { apiUrl } = env
 
 type RequestHeader = { name: string, value: string }
 
@@ -63,7 +65,7 @@ export default class Xhr<Body, Response = unknown> extends XMLHttpRequest {
       withCredentials && (this.withCredentials = true)
     }
 
-    if (url.startsWith(api)) {
+    if (url.startsWith(apiUrl)) {
       this.withCredentials = true
       const token = localStorage.getItem('access')
       if (token) {

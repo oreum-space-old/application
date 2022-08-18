@@ -1,5 +1,7 @@
 import http from '@/library/http'
-import { api } from '@/consts/envs'
+import env from '@/env'
+
+const { apiUrl } = env
 
 type Tokens = {
   refresh: string,
@@ -8,6 +10,6 @@ type Tokens = {
 
 export default {
   refreshTokens (body: Tokens) {
-    return http.post<string, Tokens>(`${api}/user/refresh`, body)
+    return http.post<string, Tokens>(`${apiUrl}/user/refresh`, body)
   }
 }
