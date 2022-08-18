@@ -1,0 +1,47 @@
+code {
+  font-family: var(--mono-font-family);
+  background-color: var(--surface-ground);
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+mark, .mark {
+  background-color: var(--yellow-5);
+  outline: 2px solid var(--yellow-5);
+  outline-offset: -1px;
+  padding-inline: 2px;
+  border-radius: 2px;
+}
+
+small, .small {
+  line-height: 16px;
+  font-size: 14px;
+}
+
+p, span, code, pre {
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-color);
+
+  $colors: ['gray', 'primary', 'success', 'warning', 'error']; @each $color in $colors {
+    .#{$color} {
+      color: var(--$color);
+    }
+  }
+}
+
+
+.a-header {
+  padding-inline: 4px;
+  color: var(--text-color);
+  text-decoration-color: transparent;
+
+  &:before {
+    content: '#';
+  }
+
+  &:hover {
+    text-decoration-color: unset;
+  }
+}

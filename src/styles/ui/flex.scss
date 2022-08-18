@@ -1,0 +1,53 @@
+.flex-wrap-reverse,
+.flex-row-wrap-reverse,
+.flex-wrap,
+.flex-row-wrap,
+.flex-row,
+.flex {
+  display: flex;
+  flex-flow: column;
+  gap: 8px;
+}
+
+.flex-wrap-reverse {
+  flex-flow: column wrap-reverse;
+}
+.flex-row-wrap-reverse {
+  flex-flow: row wrap-reverse;
+}
+
+.flex-wrap {
+  flex-flow: column wrap;
+}
+
+.flex-row-wrap {
+  flex-flow: row wrap;
+}
+
+.flex-row {
+  flex-flow: row;
+}
+
+$aligns: (start: 'flex-start', end: 'flex-end', center: 'center', baseline: 'baseline', stretch: 'stretch');
+
+@each $align, $value in $aligns {
+  .align-#{$align} {
+    align-items: #{$value};
+  }
+}
+
+$justifies: (start: 'flex-start', end: 'flex-end', center: 'center', between: 'space-between', around: 'space-around', evenly: 'space-evenly');
+
+@each $justify, $value in $justifies {
+  .justify-#{$justify} {
+    justify-content: #{$value};
+  }
+}
+
+$gaps: ('1': 4, '2': 8, '3': 12, '4': 16, '5': 20, '6': 24, '7': 28, '8': 32);
+
+@each $gap, $size in $gaps {
+  .gap#{$gap} {
+    gap: #{$size}px;
+  }
+}

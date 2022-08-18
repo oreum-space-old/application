@@ -1,0 +1,16 @@
+$headings: (
+  1: ('size': 40, 'height': 48),
+  2: ('size': 32, 'height': 40),
+  3: ('size': 28, 'height': 32),
+  4: ('size': 24, 'height': 28),
+  5: ('size': 20, 'height': 24),
+  6: ('size': 16, 'height': 20)
+);
+
+@each $heading, $value in $headings {
+  h#{$heading}, .h#{$heading} {
+    font-size: #{map-get($value, 'size')}px;
+    font-weight: 500;
+    line-height: #{map-get($value, 'height')}px;
+  }
+}

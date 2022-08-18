@@ -1,0 +1,54 @@
+:root {
+  --vh: 1vh;
+  --vhf: calc(var(--vh) * 100);
+}
+
+* {
+  padding: unset;
+  margin: unset;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  background-color: var(--surface-ground);
+  overflow: visible;
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+header, main, footer {
+  padding-inline: calc(max(24px, calc(50vw - 696px)));
+}
+
+header, footer {
+  background-color: var(--surface-card);
+  box-shadow: 0 3px 5px rgb(0 0 0 / 2%), 0 0 2px rgb(0 0 0 / 5%), 0 1px 4px rgb(0 0 0 / 8%);
+}
+
+header {
+  display: flex;
+  height: 64px;
+  top: 0;
+  position: sticky;
+  width: 100%;
+  padding-block: 4px;
+  z-index: 10;
+  gap: 24px;
+}
+
+main {
+  min-height: var(--vhf);
+  padding-block: 24px 24px;
+}
+
+footer {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  padding-block: 12px;
+  min-height: 64px;
+}
