@@ -1,4 +1,5 @@
 import type { Directive, DirectiveBinding } from 'vue'
+import type useApp from '@/stores/app'
 
 type T = HTMLElement
 type V = boolean | undefined
@@ -8,13 +9,23 @@ type M = Map<T, Over>
 type A = Set<Over>
 type E = Map<HTMLElement, Record<string, (() => void) | null>>
 
+let app = null as unknown as ReturnType<typeof useApp>
+
 class Over {
   private static readonly storage: M = new Map()
   private static readonly handling: A = new Set()
+  public static get app () { return app }
+  public static set app (_app) { app = _app }
 
   private readonly target: T
   private readonly setValue?: (v: boolean) => void
   private readonly elements: E
+
+  private static documentScrollResizeHandler (): void {
+    for (const over of Over.handling) {
+      over.setPosition()
+    }
+  }
 
   private static documentPointerDown (event: PointerEvent): void {
     const target = event.target as HTMLElement | undefined
@@ -33,7 +44,9 @@ class Over {
     this.handling.add(over)
 
     if (this.handling.size === 1) {
-      document.addEventListener('pointerdown', this.documentPointerDown)
+      addEventListener('pointerdown', this.documentPointerDown)
+      addEventListener('scroll', this.documentScrollResizeHandler)
+      addEventListener('resize', this.documentScrollResizeHandler)
     }
   }
 
@@ -41,7 +54,9 @@ class Over {
     Over.handling.delete(over)
 
     if (this.handling.size === 0) {
-      document.removeEventListener('pointerdown', this.documentPointerDown)
+      removeEventListener('pointerdown', this.documentPointerDown)
+      removeEventListener('scroll', this.documentScrollResizeHandler)
+      removeEventListener('resize', this.documentScrollResizeHandler)
     }
   }
 
@@ -83,6 +98,13 @@ class Over {
     }
   }
 
+  private static readonly positions = [
+    'left',
+    'right',
+    'top',
+    'bottom'
+  ] as Array<string>
+
   private static readonly actions = [
     'toggle',
     'hide',
@@ -123,7 +145,7 @@ class Over {
 
   protected static getElementKeys = Object.keys(this.getElement)
 
-  protected static collectModifiers(target: T, binding: B): E {
+  protected collectModifiers(target: T, binding: B): E {
     const _result = new Map()
     const result: Record<string, Record<string, (() => void) | null>> = {}
 
@@ -140,13 +162,15 @@ class Over {
           result[element][action] = null
           target.dataset[key] += `-${action}`
         }
+      } else if (Over.positions.includes(modifier)) {
+        target.dataset['vOverSide'] = modifier
       } else {
         console.warn('[v-over] unknown modifier:', modifier)
       }
     }
 
     for (const key in result) {
-      const getElement = this.getElement[key]
+      const getElement = Over.getElement[key]
 
       if (getElement) {
         const element = getElement(target)
@@ -162,14 +186,11 @@ class Over {
 
   constructor (target: T, binding: B) {
     this.target = target
-    if (binding.arg) {
-      this.setValue = binding.arg as unknown as (v: boolean) => void
-    }
-
-    this.elements = Over.collectModifiers(target, binding)
-
+    binding.arg && (this.setValue = binding.arg as unknown as (v: boolean) => void)
+    this.elements = this.collectModifiers(target, binding)
     this.addEventListeners()
     this.setVisible(binding.value)
+    this.setDefaultPosition()
   }
 
   protected static readonly eventListeners = {
@@ -258,7 +279,61 @@ class Over {
       this.setValue(!!value)
     }
   }
+
+  private setDefaultPosition (): void {
+    const pos = this.target.dataset['vOverSide']
+    const { style } = this.target
+
+    this.target.parentElement!.style.position = 'relative'
+    style.position = 'absolute'
+
+    if (pos === 'left') {
+      style.left = '0'
+      style.transform = 'translateX(-100%)'
+    } else if (pos === 'right') {
+      style.left = '100%'
+    } else if (pos === 'top') {
+      style.top = '0'
+      style.transform = 'translateY(-100%)'
+    } else {
+      style.top = '100%'
+    }
+
+    requestAnimationFrame(() => {
+      this.setPosition()
+    })
+  }
+
+  setPosition (): void {
+    requestAnimationFrame(() => {
+      const parentRect = this.target.parentElement?.getClientRects()[0]
+      const rect = this.target?.getClientRects()[0]
+
+      if (parentRect && rect) {
+        const { style } = this.target
+        const pos = this.target.dataset['vOverSide']
+
+        if (pos === 'left') {
+          console.log('todo')
+        } else if (pos === 'right') {
+          console.log('todo')
+        } else if (pos === 'top') {
+          console.log('todo')
+        } else {
+          if (app.height < rect.height + parentRect.y + parentRect.height) {
+            style.top = '0'
+            style.transform = 'translateY(-100%)'
+          } else {
+            style.top = '100%'
+            style.transform = ''
+          }
+        }
+      }
+    })
+  }
 }
+
+export const setApp = (_app: typeof app) => Over.app = _app
 
 export default {
   mounted: Over.mounted,

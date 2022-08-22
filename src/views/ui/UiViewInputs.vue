@@ -125,7 +125,7 @@
           <div
             id="test"
             v-over:[setTest].parent-toggle="test"
-            style="width: 24px; height: 24px; background: darkcyan; position: absolute; top: 100%"
+            style="width: 64px; height: 64px; background: darkcyan;"
           />
         </div>
       </ui-card>
