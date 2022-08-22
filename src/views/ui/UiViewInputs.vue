@@ -99,6 +99,56 @@
       />
     </div>
   </ui-card>
+  <ui-card class="pv6">
+    <ui-h
+      id="inputs-input-text"
+      level="3"
+      class="mb2"
+    >
+      Color Picker
+    </ui-h>
+    <ui-input-color
+      v-if="false"
+      :model-value="color"
+    />
+<!--    <ui-input-color
+      :model-value="colorOrange"
+    />
+    <ui-input-color
+      :model-value="colorGray"
+    />-->
+    <div class="flex-row gap8">
+      <ui-card>
+        <div
+          style="width: 24px; height: 24px; background: coral; position: relative"
+        >
+          <div
+            id="test"
+            v-over:[setTest].parent-toggle="test"
+            style="width: 24px; height: 24px; background: darkcyan; position: absolute; top: 100%"
+          />
+        </div>
+      </ui-card>
+      <div
+        style="width: 24px; height: 24px; background: salmon; position: relative "
+      >
+        <div
+          id="parent"
+          v-over.parent
+          style="width: 24px; height: 24px; background: forestgreen; position: absolute; top: 100%"
+        />
+      </div>
+      <div
+        style="width: 24px; height: 24px; background: coral; position: relative"
+      >
+        <div
+          id="previous"
+          v-over.previous
+          style="width: 24px; height: 24px; background: darkcyan; position: absolute; top: 100%"
+        />
+      </div>
+    </div>
+  </ui-card>
 </template>
 
 <script
@@ -106,6 +156,7 @@
   lang="ts"
 >
 import UiInputCheckBox from '@/components/ui/input/UiInputCheckBox.vue'
+import UiInputColor from '@/components/ui/input/UiInputColor.vue'
 import { ref } from 'vue'
 import UiInputGroup from '@/components/ui/input/UiInputGroup.vue'
 import UiInputText from '@/components/ui/input/UiInputText.vue'
@@ -116,13 +167,14 @@ import UiInputRadioGroupDefault, {
   GenericUiInputRadioGroup,
 } from '@/components/ui/input/UiInputRadioGroup.vue'
 
-console.log(UiInputText)
-
 // Radio Buttons
 const radioFruits = ['Apple', 'Banana', 'Coconut', 'Dewberries'] as const
 type RadioFruits = typeof radioFruits[number]
 const UiInputRadioGroupFruits = UiInputRadioGroupDefault as GenericUiInputRadioGroup<RadioFruits>
 const radioFruitsValue = ref<RadioFruits>(radioFruits[0])
+
+const test = ref(false)
+const setTest = (v: boolean) => test.value = v
 
 // Radio Buttons Cities
 const radioCities: Array<Record<string, string | number>> = [
@@ -148,6 +200,12 @@ const
   checkboxDiamond = ref<boolean>(false),
   checkboxEmerald = ref<boolean>(true),
   checkboxPeridot = ref<boolean>(false)
+
+// Color
+const
+  color = ref<number>(0xffffff),
+  colorOrange = ref<number>(0xE57737),
+  colorGray = ref<number>(0x888888)
 </script>
 
 <style
