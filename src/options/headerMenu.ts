@@ -8,6 +8,7 @@ export default [
   },
   {
     text: 'Серверы',
+    icon: 'server',
     items: [
       {
         text: '-',
@@ -17,19 +18,31 @@ export default [
   },
   {
     text: 'Правила',
+    icon: 'rules',
     action: WIP
   },
   {
     text: 'Форум',
+    icon: 'forum',
     action: WIP
   },
   {
-    text: 'Разработка',
+    text: '',
     icon: 'develop',
     items: [
       {
         text: 'Welcome',
         icon: 'user-interface',
+        to: { name: 'Welcome' }
+      },
+      {
+        text: 'Панель управления',
+        icon: 'dashboard',
+        to: { name: 'Welcome' }
+      },
+      {
+        text: 'Консоль',
+        icon: 'console',
         to: { name: 'Welcome' }
       },
       {
