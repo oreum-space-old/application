@@ -30,8 +30,6 @@ class Over {
   private static documentPointerDown (event: PointerEvent): void {
     const target = event.target as HTMLElement | undefined
     for (const over of Over.handling) {
-      console.log(over)
-
       if (!target || !over.elements.get(target)) {
         if (over.visible) {
           over.hide()
@@ -62,8 +60,6 @@ class Over {
 
   private static addOver (target: T, binding: B): void {
     this.storage.set(target, new Over(target, binding))
-
-    console.log(this.storage)
   }
 
   private static delOver (target: T): void {
@@ -71,26 +67,31 @@ class Over {
   }
 
   public static mounted (this: undefined, target: T, binding: B): void {
-    console.groupCollapsed('mounted', target.id)
-    console.dir(target)
-    console.log(binding)
-    console.groupEnd()
+    // console.groupCollapsed('mounted', target.id)
+    // console.dir(target)
+    // console.log(binding)
+    // console.groupEnd()
     Over.addOver(target, binding)
   }
 
-  public static unmounted (this: undefined, target: T, binding: B): void {
-    console.groupCollapsed('unmounted', target.id)
-    console.dir(target)
-    console.log(binding)
-    console.groupEnd()
+  public static beforeUnmount (this: undefined, target: T): void {
+    // console.groupCollapsed('unmounted', target.id)
+    // console.dir(target)
+    // console.log(binding)
+    // console.groupEnd()
     Over.delOver(target)
+    const over = Over.storage.get(target)
+
+    if (over) {
+      over.removeEventListeners()
+    }
   }
 
   public static beforeUpdate (this: undefined, target: T, binding: B): void {
-    console.groupCollapsed('beforeUpdate', target.id)
-    console.dir(target)
-    console.log(binding)
-    console.groupEnd()
+    // console.groupCollapsed('beforeUpdate', target.id)
+    // console.dir(target)
+    // console.log(binding)
+    // console.groupEnd()
     const over = Over.storage.get(target)
 
     if (over) {
@@ -206,7 +207,6 @@ class Over {
   }
 
   addEventListeners (): void {
-    console.log('addEventListeners', this.elements)
     for (const entries of this.elements) {
       const [target, actions] = entries
 
@@ -235,8 +235,35 @@ class Over {
     }
   }
 
+  private static readonly clickActions = ['toggle', 'hide', 'show']
+
   removeEventListeners (): void {
-    console.log('TODO:')
+    for (const entries of this.elements) {
+      const [target, actions] = entries
+
+      for (const action in actions) {
+        if (typeof actions[action] === 'function') {
+          const _function = actions[action] as ReturnType<typeof Over.eventListeners.toggleHandler>
+
+          if (Over.clickActions.includes(action)) {
+            target.removeEventListener('click', _function)
+          } else if (action === 'hover') {
+            target.removeEventListener(
+              'pointerenter',
+              actions[action + '-pointerenter'] as ReturnType<typeof Over.eventListeners.toggleHandler>
+            )
+            target.removeEventListener(
+              'pointerout',
+              actions[action + '-pointerout'] as ReturnType<typeof Over.eventListeners.toggleHandler>
+            )
+          } else if (action === 'blur') {
+            target.removeEventListener('pointerenter', _function)
+          } else if (action === 'over') {
+            target.removeEventListener('pointerout', _function)
+          }
+        }
+      }
+    }
   }
 
   toggle (): void {
@@ -278,13 +305,19 @@ class Over {
     if (this.setValue) {
       this.setValue(!!value)
     }
+
+    if (value) {
+      this.setPosition()
+    }
   }
 
   private setDefaultPosition (): void {
     const pos = this.target.dataset['vOverSide']
-    const { style } = this.target
+    const { style, parentElement } = this.target
 
-    this.target.parentElement!.style.position = 'relative'
+    if (parentElement) {
+      parentElement.style.position = 'relative'
+    }
     style.position = 'absolute'
 
     if (pos === 'left') {
@@ -299,9 +332,7 @@ class Over {
       style.top = '100%'
     }
 
-    requestAnimationFrame(() => {
-      this.setPosition()
-    })
+    this.setPosition()
   }
 
   setPosition (): void {
@@ -314,11 +345,11 @@ class Over {
         const pos = this.target.dataset['vOverSide']
 
         if (pos === 'left') {
-          console.log('todo')
+          console.warn('[v-over]', 'todo', 'left')
         } else if (pos === 'right') {
-          console.log('todo')
+          console.warn('[v-over]', 'todo', 'right')
         } else if (pos === 'top') {
-          console.log('todo')
+          console.warn('[v-over]', 'todo', 'top')
         } else {
           if (app.height < rect.height + parentRect.y + parentRect.height) {
             style.top = '0'
@@ -337,6 +368,6 @@ export const setApp = (_app: typeof app) => Over.app = _app
 
 export default {
   mounted: Over.mounted,
-  unmounted: Over.unmounted,
+  beforeUnmount: Over.beforeUnmount,
   beforeUpdate: Over.beforeUpdate
 } as D
