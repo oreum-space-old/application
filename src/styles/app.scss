@@ -64,12 +64,26 @@ header {
   }
 }
 
+body {
+  display: flex;
+  flex-flow: column;
+  min-height: calc(var(--vhf) + 64px);
+
+  main {
+    min-height: calc(var(--vhf) - 64px);
+    @media (max-width: 768px) {
+      min-height: calc(var(--vhf) - 52px);
+    }
+  }
+}
+
 main {
   min-height: var(--vhf);
   padding-block: 24px 24px;
 }
 
 footer {
+  margin-top: auto;
   display: flex;
   flex-flow: row;
   justify-content: space-between;

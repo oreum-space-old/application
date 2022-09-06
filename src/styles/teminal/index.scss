@@ -1,0 +1,33 @@
+@import 'colors';
+
+.terminal {
+  text-rendering: geometricPrecision;
+  background-color: var(--terminal-b);
+  color: var(--terminal-f);
+  white-space: pre;
+  display: block;
+  line-height: 21px;
+  max-width: 100%;
+  max-height: calc(100vh - 256px);
+  overflow-y: scroll;
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    display: unset;
+    width: 10px;
+    height: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border: 1px solid #00000020;
+    background: #ffffff20 content-box;
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    outline: none;
+  }
+}

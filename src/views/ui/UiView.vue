@@ -8,6 +8,7 @@
     </ui-h>
     <ui-view-typography />
     <ui-view-inputs />
+    <ui-view-buttons />
   </main>
 </template>
 
@@ -16,6 +17,7 @@
   lang="ts"
 >
 import UiH from '@/components/ui/UiH.vue'
+import UiViewButtons from '@views/ui/UiViewButtons.vue'
 import UiViewInputs from '@views/ui/UiViewInputs.vue'
 import UiViewTypography from '@views/ui/UiViewTypography.vue'
 </script>

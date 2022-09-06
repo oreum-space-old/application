@@ -16,7 +16,7 @@
       @click="!item.items && collapse()"
     >
       <router-link
-        v-if="item.to"
+        v-if="item.to && router.hasRoute(item.to.name)"
         :to="item.to"
         class="ui-menu-bar__button"
         :class="{ 'ui-menu-bar__button_opened': opened === index }"
@@ -65,8 +65,9 @@
           />
           {{ item.text }}
           <ui-icon
+            v-if="!item.arrowHidden"
             icon="dropdown-arrow"
-            :rotate="submenu ? '90' : '180'"
+            :rotate="submenu ? (opened === index ? '270' : '90') : (opened === index ? '0' : '180')"
           />
         </a>
         <ui-menu-bar
@@ -87,6 +88,7 @@
 >
 import UiIcon from '@/components/ui/UiIcon.vue'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
 
 interface ItemRaw {
@@ -96,6 +98,7 @@ interface ItemRaw {
   to?: never
   action?: never
   items?: never
+  arrowHidden?: never
 }
 
 interface ItemLink extends Omit<ItemRaw, 'link'> {
@@ -110,8 +113,9 @@ interface ItemAction extends Omit<ItemRaw, 'action'> {
   action: (this: ItemAction) => void
 }
 
-interface ItemSubmenu extends Omit<ItemRaw, 'items'> {
+interface ItemSubmenu extends Omit<ItemRaw, 'items' | 'arrowHidden'> {
   items: Items
+  arrowHidden?: boolean
 }
 
 type Item = ItemLink | ItemSubmenu | ItemAction | ItemRouterLink
@@ -126,7 +130,8 @@ const props = defineProps<{
     (e: 'collapse'): void
   }>(),
   root = ref<HTMLUListElement>(),
-  opened = ref<number>(NaN)
+  opened = ref<number>(NaN),
+  router = useRouter()
 
 function collapse () {
   emits('collapse')

@@ -1,3 +1,11 @@
 .ui-icon {
   vertical-align: bottom;
+
+  svg {
+    transform-origin: center center;
+  }
+
+  use {
+    fill: var(--text-color);
+  }
 }

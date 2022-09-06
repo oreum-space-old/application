@@ -24,10 +24,6 @@ function getLocalStorageTheme (): Theme | null {
   return result === 'light' || result === 'dark' ? result : null
 }
 
-
-
-
-
 const useApp = defineStore('app', {
   state: (): State => ({
     width: window.innerWidth || 0,

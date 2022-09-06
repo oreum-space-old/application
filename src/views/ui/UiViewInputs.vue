@@ -101,7 +101,7 @@
   </ui-card>
   <ui-card class="pv6">
     <ui-h
-      id="inputs-input-text"
+      id="inputs-color-picker"
       level="3"
       class="mb2"
     >
@@ -111,43 +111,24 @@
       v-if="false"
       :model-value="color"
     />
-<!--    <ui-input-color
-      :model-value="colorOrange"
+    <ui-input-color
+      v-model="color"
     />
     <ui-input-color
-      :model-value="colorGray"
-    />-->
-    <div class="flex-row gap8">
-      <ui-card>
-        <div
-          style="width: 24px; height: 24px; background: coral; position: relative"
-        >
-          <div
-            id="test"
-            v-over:[setTest].parent-toggle="test"
-            style="width: 64px; height: 64px; background: darkcyan;"
-          />
-        </div>
-      </ui-card>
-      <div
-        style="width: 24px; height: 24px; background: salmon; position: relative "
-      >
-        <div
-          id="parent"
-          v-over.parent
-          style="width: 24px; height: 24px; background: forestgreen; position: absolute; top: 100%"
-        />
-      </div>
-      <div
-        style="width: 24px; height: 24px; background: coral; position: relative"
-      >
-        <div
-          id="previous"
-          v-over.previous
-          style="width: 24px; height: 24px; background: darkcyan; position: absolute; top: 100%"
-        />
-      </div>
-    </div>
+      v-model="colorOrange"
+    />
+    <ui-input-color
+      v-model="colorGray"
+    />
+    <ui-input-color-new
+      v-model="colorOrange"
+    />
+  </ui-card>
+  <ui-card>
+    <ui-select
+      :options="selectOptions"
+      v-model="selectOption"
+    />
   </ui-card>
 </template>
 
@@ -156,7 +137,9 @@
   lang="ts"
 >
 import UiInputCheckBox from '@/components/ui/input/UiInputCheckBox.vue'
-import UiInputColor from '@/components/ui/input/UiInputColor.vue'
+import UiInputColor from '@/components/ui/input/UiInputColorOld.vue'
+import UiInputColorNew from '@/components/ui/input/color/UiInputColor.vue'
+import UiSelect from '@/components/UiSelect.vue'
 import { ref } from 'vue'
 import UiInputGroup from '@/components/ui/input/UiInputGroup.vue'
 import UiInputText from '@/components/ui/input/UiInputText.vue'
@@ -205,7 +188,21 @@ const
 const
   color = ref<number>(0xffffff),
   colorOrange = ref<number>(0xE57737),
-  colorGray = ref<number>(0x888888)
+  colorGray = ref<number>(0x666666),
+  colorRedAlpha = ref<number>(0xfa140280)
+
+// Select
+const
+  selectOptions = [{
+    display: 'String',
+    value: 'string'
+  }, {
+    display: 'Number',
+    value: 'number'
+  }] as const,
+  selectOption = ref(selectOptions[0])
+
+
 </script>
 
 <style

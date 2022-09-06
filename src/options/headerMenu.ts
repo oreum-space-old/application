@@ -8,7 +8,7 @@ export default [
   },
   {
     text: 'Серверы',
-    icon: 'server',
+    icon: 'servers',
     items: [
       {
         text: '-',
@@ -19,6 +19,11 @@ export default [
   {
     text: 'Правила',
     icon: 'rules',
+    action: WIP
+  },
+  {
+    text: 'Тест',
+    icon: 'test',
     action: WIP
   },
   {
@@ -38,18 +43,19 @@ export default [
       {
         text: 'Панель управления',
         icon: 'dashboard',
-        to: { name: 'Welcome' }
+        to: { name: 'Dashboard' }
       },
       {
         text: 'Консоль',
         icon: 'console',
-        to: { name: 'Welcome' }
+        to: { name: 'Dashboard Terminal' }
       },
       {
         text: 'User Interface',
         icon: 'user-interface',
         to: { name: 'User Interfaces' }
       }
-    ]
+    ],
+    arrowHidden: true
   }
 ] as const

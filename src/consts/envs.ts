@@ -1,3 +1,1 @@
-import type Url from '@/types/url'
-
-export const api: Url = 'https://localhost:444'
+export const api = new URL('https://localhost:444')

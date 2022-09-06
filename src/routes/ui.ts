@@ -4,7 +4,7 @@ const ui: Array<RouteRecordRaw> = [
   {
     name: 'User Interfaces',
     path: '/ui',
-    component: () => import('@views/ui/UiView.vue'),
+    component: () => import('@/views/ui/UiView.vue'),
     meta: { main: true }
   }
 ]

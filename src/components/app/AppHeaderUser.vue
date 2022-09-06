@@ -1,5 +1,8 @@
 <template>
-  <ui-card class="app-header-user">
+  <ui-card
+    class="app-header-user"
+    @click="user.initRoutes()"
+  >
     <div class="app-header-user__info">
       <span class="app-header-user__username">
         {{ user.username }}

@@ -1,3 +1,5 @@
+import { addRoutes } from '@/router'
+import dashboard from '@/routes/dashboard'
 import { defineStore } from 'pinia'
 
 type State = {
@@ -11,6 +13,11 @@ const useUser = defineStore('user', {
     username: 'Oredan'
   }),
   actions: {
+    initRoutes () {
+      if (this.username === 'Oredan') {
+        addRoutes(dashboard)
+      }
+    }
   }
 })
 
