@@ -5,12 +5,15 @@
   >
     <div
       ref="button"
+      role="button"
+      tabindex="0"
       class="ui-input-color__button ui-button"
       :style="{
         backgroundColor: valueHEX.value,
         color: contrast
       }"
       @click="visible = !visible"
+      @keydown.enter.space="visible = !visible"
     >
       {{ valueHEX.value }}
     </div>
@@ -97,6 +100,10 @@
           </code>
         </div>-->
       </div>
+      <div
+        class="ui-input-color__popover-arrow"
+        data-popper-arrow
+      />
     </div>
   </div>
 </template>
@@ -316,6 +323,12 @@ onMounted(() => {
       modifiers: [
         flip,
         {
+          name: 'arrow',
+          options: {
+            padding: 12,
+          }
+        },
+        {
           name: 'preventOverflow',
           options: {
             altAxis: true,
@@ -384,12 +397,20 @@ function copyColorModelValue (event: PointerEvent) {
     user-select: none;
     -webkit-user-drag: none;
 
-    @media (orientation: portrait) {
+    @media (orientation: portrait), (min-height: 768px) {
       flex-flow: column;
     }
 
     .ui-input {
       width: 256px;
+    }
+
+    &-arrow {
+      width: 16px;
+      height: 16px;
+      clip-path: polygon(8px 0, 16px 8px, 8px 16px, 0 8px);
+      left: -8px;
+      background-color: var(--surface-overlay);
     }
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div
     class="ui-input-radio-group gap4"
-    :class="column ? 'flex' : 'flex-row'"
+    :class="column ? 'flex' : 'flex-row-wrap'"
     tabindex="0"
     role="radiogroup"
     @keydown.left.up="prev"

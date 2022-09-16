@@ -1,9 +1,9 @@
 const SPACE_ATTRIBUTES = {
-  role: ['checkbox']
+  role: ['checkbox', 'button']
 } as Readonly<Record<string, Array<unknown>>>
 
 const ARROW_ATTRIBUTES = {
-  role: ['radiogroup']
+  role: ['radiogroup', 'button']
 }
 
 function findByAttribute (

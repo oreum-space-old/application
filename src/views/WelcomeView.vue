@@ -1,7 +1,7 @@
 <template>
-  <span>
-    Welcome
-  </span>
+  <main class="main main_welcome">
+    Main
+  </main>
 </template>
 
 <script

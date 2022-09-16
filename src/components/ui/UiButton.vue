@@ -17,7 +17,7 @@ import { computed } from 'vue'
 
 type Props = {
   type?: 'button' | 'submit' | 'reset'
-  seriousness?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger'
+  seriousness?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger' | 'passive'
   appearance?: '' | 'text' | 'outlined' | 'rounded' | 'rounded-outlined' | 'rounded-text'
   disabled?: boolean
 }
@@ -34,7 +34,8 @@ const
     'ui-button_success': props.seriousness === 'success',
     'ui-button_info': props.seriousness === 'info',
     'ui-button_warning': props.seriousness === 'warning',
-    'ui-button_danger': props.seriousness === 'danger'
+    'ui-button_danger': props.seriousness === 'danger',
+    'ui-button_passive': props.seriousness === 'passive'
   }))
 </script>
 
@@ -133,17 +134,26 @@ button,
       background-color: var(--danger-color-active);
     }
   }
+  &_passive {
+    background-color: var(--passive-color);
+
+    &:hover {
+      background-color: var(--passive-color-hover);
+    }
+    &:focus {
+      background-color: var(--passive-color-focus);
+    }
+    &:active {
+      background-color: var(--passive-color-active);
+    }
+  }
 
   &_rounded-outlined,
   &_outlined {
     padding: 7px 11px;
     border: 1px solid var(--primary-color);
 
-    &.ui-button_secondary { border-color: var(--secondary-color) }
-    &.ui-button_success { border-color: var(--success-color) }
-    &.ui-button_info { border-color: var(--info-color) }
-    &.ui-button_warning { border-color: var(--warning-color) }
-    &.ui-button_danger { border-color: var(--danger-color) }
+    border-color: currentColor;
   }
 
   &_rounded-outlined,
@@ -227,6 +237,19 @@ button,
         }
         &:active {
           background-color: var(--danger-color-active-text);
+        }
+      }
+      &_passive {
+        color: var(--passive-color);
+
+        &:hover {
+          background-color: var(--passive-color-hover-text);
+        }
+        &:focus {
+          background-color: var(--passive-color-focus-text);
+        }
+        &:active {
+          background-color: var(--passive-color-active-text);
         }
       }
     }

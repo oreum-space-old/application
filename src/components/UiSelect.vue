@@ -1,9 +1,14 @@
 <template>
   <div
     ref="wrapper"
+    role="button"
     class="ui-select"
-    :class="{ 'ui-select__open': visible }"
+    :class="{
+      'ui-select_open': visible,
+      'ui-select_value': !!modelValue
+    }"
     :style="{ '--item-height': itemHeight ? `${itemHeight}px` : undefined }"
+    @focusout="focusout"
   >
     <div
       ref="list"
@@ -13,7 +18,7 @@
         v-for="option of options"
         :key="option"
         class="ui-select__option"
-        :class="{ 'ui-select__option_selected': option.value === modelValue.value }"
+        :class="{ 'ui-select__option_selected': option.value === (modelValue?.value || '_') }"
         @click="updateModelValue(option); close()"
       >
         <slot
@@ -29,7 +34,6 @@
       class="ui-select__input ui-input"
       tabindex="0"
       @click.capture="inputClickHandler"
-      @keydown.prevent
       @keydown.space="visible = true"
       @keydown.esc="close"
       @keydown.enter="keydownEnterHandler"
@@ -37,12 +41,23 @@
       @keydown.down.right="keydownDownHandler"
       @keydown="keydownPagesHandler"
     >
+      <span
+        v-if="label"
+        class="ui-input-label ui-select__label"
+      >
+        {{ label }}
+      </span>
       <slot
         name="selected"
         :selected="modelValue"
         :close="close"
       >
-        {{ modelValue.display }}
+        <span
+          class="ui-select__selected"
+          :class="{ 'ui-select__selected_has': !!modelValue }"
+        >
+          {{ modelValue?.display }}
+        </span>
       </slot>
       <ui-icon
         class="ui-select__arrow"
@@ -68,7 +83,8 @@ type UiSelectValue = {
 
 type Props = {
   options: Array<UiSelectValue>
-  modelValue: UiSelectValue
+  modelValue: UiSelectValue | null
+  label?: string
   itemHeight?: number
 }
 
@@ -145,7 +161,7 @@ onBeforeUnmount(() => {
 })
 
 function getCurrentIndex (): number {
-  return props.options.indexOf(props.options.find(_ => props.modelValue.value === _.value) || props.options[0])
+  return props.options.indexOf(props.options.find(_ => props.modelValue?.value === _.value) || props.options[0])
 }
 
 function keydownEnterHandler () {
@@ -178,6 +194,16 @@ function keydownPagesHandler (event: KeyboardEvent) {
     return
   }
 }
+
+function focusout (event: FocusEvent) {
+  const path = event.composedPath()
+
+  setTimeout(() => {
+    if (document.activeElement && !path.includes(document.activeElement)) {
+      close()
+    }
+  })
+}
 </script>
 
 <style lang="scss">
@@ -192,6 +218,7 @@ function keydownPagesHandler (event: KeyboardEvent) {
     display: inline-block;
     padding-right: 32px;
     cursor: pointer;
+    min-height: 40px;
   }
 
   &:hover &__input {
@@ -243,11 +270,11 @@ function keydownPagesHandler (event: KeyboardEvent) {
   &__arrow {
     position: absolute;
     right: 8px;
-    top: 6px;
+    top: 8px;
     transform: rotate(180deg);
   }
 
-  &__open {
+  &_open {
     .ui-select__arrow {
       transform: rotate(0deg);
     }
@@ -260,6 +287,29 @@ function keydownPagesHandler (event: KeyboardEvent) {
       &[data-popper-placement=bottom] + .ui-select__input {
         border-radius: 4px 4px 0 0;
       }
+    }
+  }
+
+  &_value &__label {
+    font-size: 12px;
+    top: -0.6rem;
+    background-color: inherit;
+    padding: 2px 4px;
+    margin-left: -4px;
+    margin-top: 0;
+  }
+
+  &_open &__label {
+    color: var(--primary-color);
+  }
+
+  &__selected {
+    position: absolute;
+    opacity: 0;
+    transition: 0.25s;
+
+    &_has {
+      opacity: 1;
     }
   }
 }

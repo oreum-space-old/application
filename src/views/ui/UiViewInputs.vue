@@ -147,6 +147,20 @@
       v-model="selectOption"
       :options="selectOptions"
     />
+    <div class="flex-row">
+      <ui-select
+        v-model="selectOptionPlaceholder"
+        :options="selectOptions"
+        label="Select"
+      />
+      <ui-button
+        appearance="outlined"
+        seriousness="passive"
+        @click="selectOptionPlaceholder = null"
+      >
+        Reset
+      </ui-button>
+    </div>
   </ui-card>
 </template>
 
@@ -156,6 +170,7 @@
 >
 import UiInputCheckBox from '@/components/ui/input/UiInputCheckBox.vue'
 import UiInputColorNew from '@/components/ui/input/color/UiInputColor.vue'
+import UiButton from '@/components/ui/UiButton.vue'
 import UiSelect from '@/components/UiSelect.vue'
 import { ref } from 'vue'
 import UiInputGroup from '@/components/ui/input/UiInputGroup.vue'
@@ -234,7 +249,8 @@ const
         .map((item, index) => ({ display: `index: ${index + 1}`, value: (index + 1).toString() }))
     )
   ],
-  selectOption = ref(selectOptions[0])
+  selectOption = ref(selectOptions[0]),
+  selectOptionPlaceholder = ref<typeof selectOptions[number] | null>(null)
 
 
 </script>

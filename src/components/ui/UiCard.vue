@@ -15,7 +15,7 @@
 import { computed } from 'vue'
 
 type Props = {
-  tag?: 'div' | 'section' | 'nav'
+  tag?: 'div' | 'section' | 'nav' | 'aside'
   row?: boolean
 }
 const

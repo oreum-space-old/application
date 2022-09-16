@@ -50,6 +50,9 @@
       <ui-button seriousness="danger">
         Danger
       </ui-button>
+      <ui-button seriousness="passive">
+        Passive
+      </ui-button>
     </div>
     <ui-h
       id="buttons-text"
@@ -94,6 +97,11 @@
         seriousness="danger"
       >
         Danger
+      </ui-button><ui-button
+        appearance="text"
+        seriousness="passive"
+      >
+        Passive
       </ui-button>
     </div>
     <ui-h
@@ -139,6 +147,11 @@
         seriousness="danger"
       >
         Danger
+      </ui-button><ui-button
+        appearance="outlined"
+        seriousness="passive"
+      >
+        Passive
       </ui-button>
     </div>
     <ui-h
@@ -184,6 +197,11 @@
         seriousness="danger"
       >
         Danger
+      </ui-button><ui-button
+        appearance="rounded"
+        seriousness="passive"
+      >
+        Passive
       </ui-button>
     </div>
     <ui-h
@@ -230,6 +248,12 @@
       >
         Danger
       </ui-button>
+      <ui-button
+        appearance="rounded-text"
+        seriousness="passive"
+      >
+        Passive
+      </ui-button>
     </div>
     <ui-h
       id="buttons-rounded-outlined"
@@ -274,6 +298,11 @@
         seriousness="danger"
       >
         Danger
+      </ui-button><ui-button
+        appearance="rounded-outlined"
+        seriousness="passive"
+      >
+        Passive
       </ui-button>
     </div>
   </ui-card>

@@ -62,7 +62,7 @@ textarea {
   &:enabled:focus ~ &-label {
     font-size: 12px;
     top: -0.6rem;
-    background-color: var(--surface-card);
+    background-color: var(--background-color);
     padding: 2px 4px;
     margin-left: -4px;
     margin-top: 0;

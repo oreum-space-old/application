@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="header">
     <app-header-logo />
     <app-header-navigation />
     <app-header-user />
