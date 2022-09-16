@@ -9,7 +9,7 @@
   <ui-card>
     <ui-h
       id="buttons-default"
-      level="3"
+      level="4"
       class="mb2"
     >
       Default
@@ -24,11 +24,9 @@
         Disabled
       </ui-button>
     </div>
-  </ui-card>
-  <ui-card>
     <ui-h
       id="buttons-severities"
-      level="3"
+      level="4"
       class="mb2"
     >
       Severities
@@ -53,11 +51,9 @@
         Danger
       </ui-button>
     </div>
-  </ui-card>
-  <ui-card>
     <ui-h
       id="buttons-text"
-      level="3"
+      level="4"
       class="mb2"
     >
       Text
@@ -100,11 +96,9 @@
         Danger
       </ui-button>
     </div>
-  </ui-card>
-  <ui-card>
     <ui-h
       id="buttons-outlined"
-      level="3"
+      level="4"
       class="mb2"
     >
       Outlined
@@ -147,11 +141,9 @@
         Danger
       </ui-button>
     </div>
-  </ui-card>
-  <ui-card>
     <ui-h
       id="buttons-rounded"
-      level="3"
+      level="4"
       class="mb2"
     >
       Rounded
@@ -194,11 +186,9 @@
         Danger
       </ui-button>
     </div>
-  </ui-card>
-  <ui-card>
     <ui-h
       id="buttons-rounded-text"
-      level="3"
+      level="4"
       class="mb2"
     >
       Rounded Text
@@ -241,11 +231,9 @@
         Danger
       </ui-button>
     </div>
-  </ui-card>
-  <ui-card>
     <ui-h
       id="buttons-rounded-outlined"
-      level="3"
+      level="4"
       class="mb2"
     >
       Rounded Outlined

@@ -19,18 +19,83 @@
       class="ui-input-color__popover"
     >
       <div
+        ref="box"
         class="ui-input-color__box"
         :class="{ 'ui-input-color__box_hsl': colorModel === 'HSL' }"
-        :style="{ color: `hsl(${valueHSL.h}deg 100% 50%)` }"
-        @click="colorModel = colorModel === 'HSL' ? 'HEX' : 'HSL'"
+        :style="{
+          color: `hsl(${valueHSL.h}deg 100% 50%)`,
+          '--contrast': contrast
+        }"
+        @scroll.prevent.capture
+        @pointerdown="boxPointerDown"
       >
         <div
-          ref="cursor"
           class="ui-input-color__pointer"
+          :style="{
+            backgroundColor: valueHEX.value,
+            left: `${(colorModel === 'HSL' ? valueHSL.s : valueHSV.s) * 2.55}px`,
+            top: `calc(255px - ${(colorModel === 'HSL' ? valueHSL.l : valueHSV.v) * 2.55}px)`
+          }"
         />
       </div>
-      <div class="ui-input-color">
-
+      <div class="ui-input-color__form">
+        <ui-select
+          :model-value="{ display: colorModel, value: colorModel }"
+          :options="COLOR_MODELS.map(_ => ({ display: _, value: _ }))"
+          @update:model-value="colorModel = $event.value"
+        >
+          <template #option="{ option }">
+            <div class="ui-input-color__color-model ui-input-color__color-model_option">
+              <b>{{ option.display }}</b>
+              <small>{{ this[`value${ option.value }`].value }}</small>
+            </div>
+          </template>
+          <template #selected="{ selected, close }">
+            <div class="ui-input-color__color-model">
+              <b>{{ selected.display }}</b>
+              <small
+                class="small-small"
+                @click="copyColorModelValue($event); close()"
+              >
+                {{ this[`value${selected.value}`].value }}
+              </small>
+            </div>
+          </template>
+        </ui-select>
+        <component
+          :is="colorModelForm"
+          :value="this[`value${colorModel}`]"
+          :model="colorModel"
+          @set-value="setValue"
+        />
+        <!--
+        <div
+          style="
+            position: absolute;
+            display: flex;
+            flex-flow: row wrap;
+            bottom: calc(100%);
+            gap: 8px;
+            left: 0;
+            padding: 8px;
+            width: 66vw;
+            max-width: 66vw
+          "
+        >
+          <code
+            v-for="_model of COLOR_MODELS"
+            :key="_model"
+            style="min-width: 256px; box-shadow: var(&#45;&#45;surface-overlay-shadow)"
+          >
+            <small style="color: greenyellow">debug </small>
+            <small
+              v-for="(_value, key) in this[`value${_model}`]"
+              :key="key"
+            >
+              {{ key[0] }}: {{ _value }}<br>
+            </small>
+          </code>
+        </div>-->
       </div>
     </div>
   </div>
@@ -40,30 +105,28 @@
   setup
   lang="ts"
 >
+import UiSelect from '@/components/UiSelect.vue'
 import updateVisibility from '@/library/updateVisibility'
 import { createPopper, flip, Instance } from '@popperjs/core'
+import type { Component } from 'vue'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   COLOR_MODELS,
-  ColorModel,
-  ColorValue,
-  ColorValueCMY,
-  ColorValueHEX,
-  ColorValueHSL,
-  ColorValueHSV,
-  ColorValueRGB, rgbToHsl, rgbToHsv
+  ColorModel, ColorValue, ColorValueCMY, ColorValueHEX, ColorValueHSL, ColorValueHSV, ColorValueRGB, ColorValueRGBLike,
+  getColorModelComponent, hslToRgb, hsvToRgb, rgbToHsl, rgbToHsv,
+  valueCMYValue, valueHEXValue, valueHSLValue, valueHSVValue, valueRGBValue
 } from '.'
 
+type ModelValue = string | number
+
 type Props = {
-  modelValue: string | number
+  modelValue: ModelValue
   alpha?: true,
   colorModel?: ColorModel
 }
 
-type ModelValue = Props['modelValue']
-
 type Emits = {
-  (e: 'update:modelValue', v: Props['modelValue']): void
+  (e: 'update:modelValue', v: ModelValue): void
 }
 
 const
@@ -77,128 +140,152 @@ const
       ? (typeof props.modelValue === 'string' ? parseInt(props.modelValue.slice(1), 16) : props.modelValue) & 0xff
       : undefined
   }),
-  value = computed<number>({
-    get () {
+  value = computed<number>((): number => {
       if (typeof props.modelValue === 'string') {
         return parseInt(props.modelValue.slice(1), 16) >> (props.alpha ? 8 : 0)
       }
       return props.modelValue
-    },
-    set (v: ModelValue | ColorValue) {
-      if (typeof v !== 'object') {
-        emits('update:modelValue', v)
-      }
-      // TODO: сделать конвертер в ColorValue => ModelValue
     }
-  }),
-  _valueHEX = ref<ColorValueHEX>({
+  ),
+  valueHEX = ref<ColorValueHEX>({
     model: COLOR_MODELS[0],
     r: value.value >> 16 & 0xff,
     g: value.value >> 8 & 0xff,
     b: value.value & 0xff,
-    value: `#${ (
-      value.value.toString(16).padStart(6, '0') + (
-        alpha.value === undefined ? '' : alpha.value.toString(16).padStart(2, '0')
-      )
-    ).toUpperCase() }`
+    value: valueHEXValue(
+      { r: value.value >> 16 & 0xff, g: value.value >> 8 & 0xff, b: value.value & 0xff },
+      alpha.value
+    )
   }),
-  _valueRGB = ref<ColorValueRGB>({
+  valueRGB = ref<ColorValueRGB>({
     model: COLOR_MODELS[1],
-    r: _valueHEX.value.r,
-    g: _valueHEX.value.g,
-    b: _valueHEX.value.b,
-    value: alpha.value === undefined
-      ? `rgb(${
-        value.value << 16 & 0xff
-      }, ${
-        value.value << 16 & 0xff
-      }, ${
-        value.value << 16 & 0xff
-      })`
-      : `rgba(${
-        value.value << 16 & 0xff
-      }, ${
-        value.value << 16 & 0xff
-      }, ${
-        value.value << 16 & 0xff
-      }, ${
-        alpha.value.toFixed(3)
-      })`
+    r: valueHEX.value.r,
+    g: valueHEX.value.g,
+    b: valueHEX.value.b,
+    value: valueRGBValue(valueHEX.value, alpha.value)
   }),
-  _valueCMY = ref<ColorValueCMY>({
+  valueCMY = ref<ColorValueCMY>({
     model: COLOR_MODELS[2],
-    c: 1 - _valueHEX.value.r / 0xff,
-    m: 1 - _valueHEX.value.g / 0xff,
-    y: 1 - _valueHEX.value.b / 0xff,
-    value: alpha.value === undefined
-      ? `cmy(${
-        (1 - _valueHEX.value.r / 0xff).toFixed(3)
-      }, ${
-        (1 - _valueHEX.value.g / 0xff).toFixed(3)
-      }, ${
-        (1 - _valueHEX.value.b / 0xff).toFixed(3)
-      })`
-      : `cmy(${
-        (1 - _valueHEX.value.r / 0xff).toFixed(3)
-      }, ${
-        (1 - _valueHEX.value.g / 0xff).toFixed(3)
-      }, ${
-        (1 - _valueHEX.value.b / 0xff).toFixed(3)
-      }, ${
-        alpha.value.toFixed(3)
-      })`
+    c: 1 - valueHEX.value.r / 0xff,
+    m: 1 - valueHEX.value.g / 0xff,
+    y: 1 - valueHEX.value.b / 0xff,
+    value: valueCMYValue({
+      c: 1 - valueHEX.value.r / 0xff,
+      m: 1 - valueHEX.value.g / 0xff,
+      y: 1 - valueHEX.value.b / 0xff
+    }, alpha.value)
   }),
-  _valueHSL = ref<ColorValueHSL>(rgbToHsl(_valueRGB.value, alpha.value)),
-  _valueHSV = ref<ColorValueHSV>(rgbToHsv(_valueRGB.value, alpha.value)),
-  valueHEX = computed<ColorValueHEX>({
-    get () {
-      return _valueHEX.value
-    },
-    set (colorValue: ColorValue): void {
-      console.info('todo')
+  valueHSL = ref<ColorValueHSL>(rgbToHsl(valueRGB.value, alpha.value)),
+  valueHSV = ref<ColorValueHSV>(rgbToHsv(valueRGB.value, alpha.value)),
+  contrast = computed<string>(
+    () => {
+      const
+        r = valueRGB.value.r / 255,
+        g = valueRGB.value.g / 255,
+        b = valueRGB.value.b / 255
+
+      return ((r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4)) * 0.2126
+        + (g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4)) * 0.7152
+        + (b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4)) * 0.0722) > 0.179
+        ? 'black'
+        : 'white'
     }
-  }),
-  valueRGB = computed<ColorValueRGB>({
-    get () {
-      return _valueRGB.value
-    },
-    set (colorValue: ColorValue): void {
-      console.info('todo')
+  ),
+  colorModelForm = computed<Component>(() => getColorModelComponent(colorModel.value)),
+  box = ref<HTMLElement>()
+
+let rects: DOMRect
+
+function pointerMoveHandle (event: PointerEvent) {
+  if (rects) {
+    const
+      isHSV = colorModel.value !== COLOR_MODELS[3],
+      x = Math.max(Math.min(event.clientX - rects.x, 255), 0),
+      y = Math.max(Math.min(event.clientY - rects.y, 255), 0),
+      xx = Math.round(x * 100 / 2.55) / 100,
+      yy = Math.round(10000 - y * 100 / 2.55) / 100
+
+    setValue(isHSV ? {
+      model: COLOR_MODELS[4],
+      h: valueHSV.value.h,
+      s: xx,
+      v: yy
+    } as Omit<ColorValueHSV, 'value'> : {
+      model: COLOR_MODELS[3],
+      h: valueHSV.value.h,
+      s: xx,
+      l: yy
+    } as Omit<ColorValueHSL, 'value'>)
+  }
+}
+
+
+function pointerUpHandler (event: PointerEvent) {
+  removeEventListener('pointermove', pointerMoveHandle)
+  pointerMoveHandle(event)
+}
+
+function boxPointerDown (event: PointerEvent) {
+  const target = event.target as HTMLElement
+
+  if (target) {
+    rects = target.getBoundingClientRect()
+    console.log(event)
+    addEventListener('pointermove', pointerMoveHandle)
+    addEventListener('pointerup', pointerUpHandler, { once: true })
+  }
+}
+
+function setValue (v: ModelValue | Omit<ColorValue, 'value'>): void {
+  let rgb: ColorValueRGBLike
+  if (typeof v !== 'object') {
+    emits('update:modelValue', v)
+    const n = typeof v === 'string' ? parseInt(v, 16) : v
+    rgb = { r: n >> 16 & 0xff, g: n >> 8 & 0xff, b: n & 0xff }
+  } else {
+    if (v.model === COLOR_MODELS[0] || v.model === COLOR_MODELS[1]) {
+      rgb = {
+        r: (v as ColorValueRGB).r,
+        g: (v as ColorValueRGB).g,
+        b: (v as ColorValueRGB).b
+      }
+    } else if (v.model === COLOR_MODELS[2]) {
+      valueCMY.value = { ...(v as ColorValueCMY), value: valueCMYValue((v as ColorValueCMY), alpha.value) }
+      rgb = {
+        r: Math.round((1 - (v as ColorValueCMY).c) * 255),
+        g: Math.round((1 - (v as ColorValueCMY).m) * 255),
+        b: Math.round((1 - (v as ColorValueCMY).y) * 255)
+      }
+    } else if (v.model === COLOR_MODELS[3]) {
+      valueHSL.value = v as ColorValueHSL
+      valueHSL.value.value = valueHSLValue(v as ColorValueHSL)
+      rgb = hslToRgb(v as ColorValueHSL)
+    } else {
+      valueHSV.value = v as ColorValueHSV
+      valueHSV.value.value = valueHSVValue(v as ColorValueHSV)
+      rgb = hsvToRgb(v as ColorValueHSV)
     }
-  }),
-  valueCMY = computed<ColorValueCMY>({
-    get () {
-      return _valueCMY.value
-    },
-    set (colorValue: ColorValue): void {
-      console.info('todo')
-    }
-  }),
-  valueHSL = computed<ColorValueHSL>({
-    get () {
-      return _valueHSL.value
-    },
-    set (colorValue: ColorValue): void {
-      console.info('todo')
-    }
-  }),
-  valueHSV = computed<ColorValueHSV>({
-    get () {
-      return _valueHSV.value
-    },
-    set (colorValue: ColorValue): void {
-      console.info('todo')
-    }
-  }),
-  contrast = computed(
-    () =>
-      Object
-        .values(valueRGB)
-        .filter(_ => typeof _ === 'number')
-        .reduce(($, _) => $ + _, 0) > 0x18
-        ? 'white'
-        : 'black'
-  )
+    emits(
+      'update:modelValue',
+      typeof props.modelValue === 'string'
+        ? valueHEXValue(rgb, alpha.value)
+        : rgb.r << 16 + rgb.g << 8 + rgb.b
+    )
+  }
+
+  valueHEX.value = { model: COLOR_MODELS[0], ...rgb, value: valueHEXValue(rgb, alpha.value) }
+  valueRGB.value = { model: COLOR_MODELS[1], ...rgb, value: valueRGBValue(rgb, alpha.value) }
+  if (typeof v === 'object' && v.model !== COLOR_MODELS[2]) {
+    const cmy = { c: 1 - rgb.r / 0xff, m: 1 - rgb.g / 0xff, y: 1 - rgb.b / 0xff }
+    valueCMY.value = { model: COLOR_MODELS[2], ...cmy, value: valueCMYValue(cmy, alpha.value) }
+  }
+  if (typeof v === 'object' && v.model !== COLOR_MODELS[3]) {
+    valueHSL.value = rgbToHsl(valueRGB.value, alpha.value, valueHSL.value.h)
+  }
+  if (typeof v === 'object' && v.model !== COLOR_MODELS[4]) {
+    valueHSV.value = rgbToHsv(valueRGB.value, alpha.value, valueHSV.value.h)
+  }
+}
 
 // Popover
 const
@@ -249,12 +336,23 @@ onMounted(() => {
     })
   }
 })
+
 onBeforeUnmount(() => {
   if (popper) {
     popper.destroy()
   }
   removeEventListener('pointerdown', pointerdownHandler)
 })
+
+function copyColorModelValue (event: PointerEvent) {
+  const target = event.target as HTMLElement
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(target.innerText)
+  } else {
+    console.warn('Clipboard API are not available!')
+  }
+}
 </script>
 
 <style lang="scss">
@@ -311,9 +409,13 @@ onBeforeUnmount(() => {
     width: 11px;
     height: 11px;
     border-radius: 5px;
-    border: 1px solid var(--color);
-    transform: translate(-5px, 5px);
+    border: 1px solid var(--contrast);
+    transform: translate(-5px, -5px);
     transition: border-color ease-in-out 0.25s;
+    background-color: transparent;
+    z-index: 1;
+    left: 0;
+    top: 0;
 
     &::after {
       content: ' ';
@@ -323,16 +425,30 @@ onBeforeUnmount(() => {
       position: relative;
       width: 1px;
       height: 1px;
-      background-color: var(--color);
+      background-color: var(--contrast);
       border-radius: 1px;
       transition: background-color ease-in-out 0.25s;
     }
   }
 
-  &__form {
+  &__form,
+  &__model {
     display: flex;
     flex-flow: column;
     gap: 8px;
+  }
+
+  &__color-model {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 8px;
+    white-space: nowrap;
+    justify-content: space-between;
+
+    &:not(&_option) small {
+      font-size: 13px;
+      cursor: copy;
+    }
   }
 }
 

@@ -33,7 +33,7 @@
       level="3"
       class="mb2 mt4"
     >
-      Input group
+      Input Group
     </ui-h>
     <ui-input-group>
       <ui-input-text
@@ -50,11 +50,11 @@
       />
     </ui-input-group>
     <ui-h
-      id="inputs-group"
+      id="inputs-textarea"
       level="3"
       class="mb2 mt4"
     >
-      Input group
+      Input Textarea
     </ui-h>
     <ui-input-group>
       <ui-input-textarea
@@ -65,18 +65,14 @@
   </ui-card>
   <ui-card class="pv6">
     <ui-h
-      id="inputs-input-text"
+      id="inputs-input-radio"
       level="3"
       class="mb2"
     >
-      Input Text
+      Input Radio
     </ui-h>
-    <ui-input-radio-group-fruits
-      :model-value="radioFruitsValue"
-      :options="radioFruits"
-      @update:model-value="radioFruitsValue = $event"
-    />
     <ui-input-radio-group-city
+      class="mb1"
       :model-value="radioCityValue"
       :options="radioCities"
       options-key="cityKey"
@@ -84,6 +80,34 @@
       column
       @update:model-value="radioCityValue = $event"
     />
+    <ui-input-radio-group-fruits
+      :model-value="radioFruitsValue"
+      :options="radioFruits"
+      @update:model-value="radioFruitsValue = $event"
+    />
+  </ui-card>
+  <ui-card class="pv6">
+    <ui-h
+      id="inputs-input-checkbox"
+      level="3"
+      class="mb2"
+    >
+      Input Checkbox
+    </ui-h>
+    <div class="flex gap4 mb1">
+      <ui-input-check-box
+        v-model="checkboxDiamond"
+        label="Diamond"
+      />
+      <ui-input-check-box
+        v-model="checkboxEmerald"
+        label="Emerald"
+      />
+      <ui-input-check-box
+        v-model="checkboxPeridot"
+        label="Peridot"
+      />
+    </div>
     <div class="flex-row gap4">
       <ui-input-check-box
         v-model="checkboxDiamond"
@@ -101,33 +125,27 @@
   </ui-card>
   <ui-card class="pv6">
     <ui-h
-      id="inputs-color-picker"
+      id="inputs-color"
       level="3"
       class="mb2"
     >
-      Color Picker
+      Input Color
     </ui-h>
-    <ui-input-color
-      v-if="false"
-      :model-value="color"
-    />
-    <ui-input-color
-      v-model="color"
-    />
-    <ui-input-color
-      v-model="colorOrange"
-    />
-    <ui-input-color
-      v-model="colorGray"
-    />
     <ui-input-color-new
-      v-model="colorOrange"
+      v-model="color"
     />
   </ui-card>
   <ui-card>
+    <ui-h
+      id="inputs-select"
+      level="3"
+      class="mb2"
+    >
+      Input Select
+    </ui-h>
     <ui-select
-      :options="selectOptions"
       v-model="selectOption"
+      :options="selectOptions"
     />
   </ui-card>
 </template>
@@ -137,7 +155,6 @@
   lang="ts"
 >
 import UiInputCheckBox from '@/components/ui/input/UiInputCheckBox.vue'
-import UiInputColor from '@/components/ui/input/UiInputColorOld.vue'
 import UiInputColorNew from '@/components/ui/input/color/UiInputColor.vue'
 import UiSelect from '@/components/UiSelect.vue'
 import { ref } from 'vue'
@@ -155,9 +172,6 @@ const radioFruits = ['Apple', 'Banana', 'Coconut', 'Dewberries'] as const
 type RadioFruits = typeof radioFruits[number]
 const UiInputRadioGroupFruits = UiInputRadioGroupDefault as GenericUiInputRadioGroup<RadioFruits>
 const radioFruitsValue = ref<RadioFruits>(radioFruits[0])
-
-const test = ref(false)
-const setTest = (v: boolean) => test.value = v
 
 // Radio Buttons Cities
 const radioCities: Array<Record<string, string | number>> = [
@@ -185,21 +199,41 @@ const
   checkboxPeridot = ref<boolean>(false)
 
 // Color
-const
-  color = ref<number>(0xffffff),
-  colorOrange = ref<number>(0xE57737),
-  colorGray = ref<number>(0x666666),
-  colorRedAlpha = ref<number>(0xfa140280)
+const color = ref<number>(0xE57737)
 
 // Select
 const
-  selectOptions = [{
-    display: 'String',
-    value: 'string'
-  }, {
-    display: 'Number',
-    value: 'number'
-  }] as const,
+  selectOptions = [
+    {
+      display: 'String',
+      value: '\'\''
+    },
+    {
+      display: 'Number',
+      value: '0'
+    },
+    {
+      display: 'Boolean',
+      value: 'false'
+    },
+    {
+      display: 'Object',
+      value: 'null'
+    },
+    {
+      display: 'Array',
+      value: '[]'
+    },
+    {
+      display: 'undefined',
+      value: 'undefined'
+    },
+    ...(
+      new Array(40)
+        .fill(0)
+        .map((item, index) => ({ display: `index: ${index + 1}`, value: (index + 1).toString() }))
+    )
+  ],
   selectOption = ref(selectOptions[0])
 
 
@@ -209,5 +243,4 @@ const
   lang="scss"
   scoped
 >
-
 </style>

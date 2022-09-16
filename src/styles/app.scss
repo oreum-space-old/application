@@ -90,3 +90,19 @@ footer {
   padding-block: 12px;
   min-height: 64px;
 }
+
+.modals-container {
+  top: 0;
+  left: 0;
+  z-index: 10;
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: var(--vhf);
+  background-color: transparent;
+
+  &:has(.ui-modal) {
+    display: block;
+    background-color: var(--maskbg);
+  }
+}

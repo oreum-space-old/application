@@ -79,6 +79,14 @@ textarea {
   &_invalid {
     border-color: var(--error);
 
+    &:enabled:hover {
+      border-color: var(--error-hover);
+
+      & .ui-input-label {
+        color: var(--error-hover) !important;
+      }
+    }
+
     &:enabled:focus {
       box-shadow: inset 0 0 0 1px var(--error), inset 0 0 0 1px var(--error), inset 0 0 0 1px var(--error), inset 0 0 0 1px var(--error);
       border-color: var(--error);
@@ -110,6 +118,8 @@ textarea {
   width: 20px;
   height: 20px;
   border: 2px solid #ffffffb3;
+  box-shadow: 0 0 1px 0 rgb(206 147 216 / 4%);
+  transition: 0.25s;
 
   &__label {
     display: flex;
@@ -120,8 +130,13 @@ textarea {
 
 .ui-input-radio {
   border-radius: 10px;
+  outline-offset: 2px;
 
-  .ui-input-radio__icon {
+  &-group:focus {
+    outline: none;
+  }
+
+  &__icon {
     transition: 0.25s;
     width: 0;
     height: 0;
@@ -129,10 +144,11 @@ textarea {
   }
 
   &:hover {
-    box-shadow: 0 0 1px 10px rgb(206 147 216 / 4%);
+    box-shadow: 0 0 1px 8px rgb(206 147 216 / 4%);
   }
 
-  &_selected {
+  &_selected,
+  &-group:focus-visible &_selected {
     border-color: var(--primary-color);
 
     .ui-input-radio__icon {
@@ -141,8 +157,51 @@ textarea {
     }
   }
 
+  &-group:focus-visible &_selected {
+    // outline: 2px solid var(--text-color);
+    box-shadow: 0 0 0 8px rgb(206 147 216 / 4%);
+    // outline-color: var(--text-color);
+  }
+
   &__icon {
     display: block;
     background-color: var(--primary-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-color);
+    box-shadow: 0 0 0 8px rgb(206 147 216 / 4%);
+    outline-color: var(--text-color);
+  }
+}
+
+.ui-input-checkbox {
+  border-radius: 2px;
+  background-color: transparent;
+  --clip-path-first: "M7.99992 15.7778L3.33325 11.1111L4.88881 9.55555V-20H-20V40H40V-20H4.88881V9.55555L7.99992 12.6667L7.99992 12.6667L9.56444 14.2222L7.99992 15.7778Z";
+  clip-path: path(var(--clip-path-first));
+  outline: 0 solid transparent;
+  outline-offset: 1px;
+
+  &:hover {
+    box-shadow: 0 0 0 8px rgb(206 147 216 / 4%);
+  }
+
+  &[aria-checked=true] {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    --clip-path: "M7.99992 15.7778L3.33325 11.1111L4.88881 9.55555V-20H-20V40H40V-20H4.88881V9.55555L7.99992 12.6667L15.8888 4.77777L17.4444 6.33333L7.99992 15.7778Z";
+    clip-path: path(var(--clip-path));
+
+    .ui-input-checkbox__icon {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-color);
+    box-shadow: 0 0 0 8px rgb(206 147 216 / 4%);
+    outline-color: var(--text-color);
   }
 }

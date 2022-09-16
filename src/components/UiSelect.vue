@@ -3,6 +3,7 @@
     ref="wrapper"
     class="ui-select"
     :class="{ 'ui-select__open': visible }"
+    :style="{ '--item-height': itemHeight ? `${itemHeight}px` : undefined }"
   >
     <div
       ref="list"
@@ -12,18 +13,42 @@
         v-for="option of options"
         :key="option"
         class="ui-select__option"
-        @click="updateModelValue(option); visible = false"
+        :class="{ 'ui-select__option_selected': option.value === modelValue.value }"
+        @click="updateModelValue(option); close()"
       >
-        {{ option.display }}
+        <slot
+          name="option"
+          :option="option"
+        >
+          {{ option.display }}
+        </slot>
       </div>
     </div>
-    <span
+    <div
       ref="input"
-      class="ui-select__input ui-input caret-hidden"
-      @click.capture="visible = !visible"
+      class="ui-select__input ui-input"
+      tabindex="0"
+      @click.capture="inputClickHandler"
+      @keydown.prevent
+      @keydown.space="visible = true"
+      @keydown.esc="close"
+      @keydown.enter="keydownEnterHandler"
+      @keydown.up.left="keydownUpHandler"
+      @keydown.down.right="keydownDownHandler"
+      @keydown="keydownPagesHandler"
     >
-      {{ modelValue.display }}
-    </span>
+      <slot
+        name="selected"
+        :selected="modelValue"
+        :close="close"
+      >
+        {{ modelValue.display }}
+      </slot>
+      <ui-icon
+        class="ui-select__arrow"
+        icon="dropdown-arrow"
+      />
+    </div>
   </div>
 </template>
 
@@ -31,6 +56,7 @@
   setup
   lang="ts"
 >
+import UiIcon from '@/components/ui/UiIcon.vue'
 import updateVisibility from '@/library/updateVisibility'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { createPopper, flip, preventOverflow, Instance } from '@popperjs/core'
@@ -43,6 +69,7 @@ type UiSelectValue = {
 type Props = {
   options: Array<UiSelectValue>
   modelValue: UiSelectValue
+  itemHeight?: number
 }
 
 const
@@ -51,16 +78,29 @@ const
     (e: 'update:modelValue', value: UiSelectValue): void
   }>(),
   visible = ref<boolean>(false),
+  prevent = ref<boolean>(false),
   input = ref<HTMLElement>(),
   list = ref<HTMLElement>(),
   wrapper = ref<HTMLElement>()
 
 let popper: Instance | null = null
 
+function inputClickHandler () {
+  if (!prevent.value) {
+    visible.value = !visible.value
+  } else {
+    prevent.value = false
+  }
+}
+
 function pointerdownHandler (event: PointerEvent) {
   if (visible.value === true && wrapper.value && !event.composedPath().includes(wrapper.value)) {
     visible.value = false
   }
+}
+
+function close () {
+  visible.value = false
 }
 
 addEventListener('pointerdown', pointerdownHandler)
@@ -70,8 +110,22 @@ function _updateVisibility () {
 
 watch(visible, _updateVisibility)
 
-function updateModelValue (modelValue: UiSelectValue) {
-  emits('update:modelValue', modelValue)
+function updateModelValue (value: UiSelectValue | number) {
+  const modelValue = typeof value !== 'number'
+    ? value
+    : props.options.at(
+      value >= 0
+        ? Math.min(props.options.length - 1, value)
+        : Math.max(-props.options.length, value))
+
+  if (modelValue) {
+    emits('update:modelValue', modelValue)
+    if (list.value) {
+      const index = props.options.findIndex((_) => modelValue.value === _.value)
+
+      list.value.scrollTo({ top: (index - 1) * (props.itemHeight || 36) })
+    }
+  }
 }
 
 onMounted(() => {
@@ -89,6 +143,41 @@ onBeforeUnmount(() => {
   }
   removeEventListener('pointerdown', pointerdownHandler)
 })
+
+function getCurrentIndex (): number {
+  return props.options.indexOf(props.options.find(_ => props.modelValue.value === _.value) || props.options[0])
+}
+
+function keydownEnterHandler () {
+  visible.value = !visible.value
+}
+
+function keydownUpHandler () {
+  updateModelValue(Math.max(getCurrentIndex() - 1, 0))
+}
+
+function keydownDownHandler () {
+  updateModelValue(Math.min(getCurrentIndex() + 1, props.options.length - 1))
+}
+
+function keydownPagesHandler (event: KeyboardEvent) {
+  if (event.key === 'Home') {
+    updateModelValue(0)
+    return
+  }
+  if (event.key === 'End') {
+    updateModelValue(-1)
+    return
+  }
+  if (event.key === 'PageUp') {
+    updateModelValue(Math.max(getCurrentIndex() - 10, 0))
+    return
+  }
+  if (event.key === 'PageDown') {
+    updateModelValue(getCurrentIndex() + 10)
+    return
+  }
+}
 </script>
 
 <style lang="scss">
@@ -97,9 +186,12 @@ onBeforeUnmount(() => {
   display: flex;
   max-width: fit-content;
   max-height: fit-content;
+  --item-height: 36px;
 
   &__input {
     display: inline-block;
+    padding-right: 32px;
+    cursor: pointer;
   }
 
   &:hover &__input {
@@ -118,13 +210,56 @@ onBeforeUnmount(() => {
     background-color: var(--surface-overlay);
     box-shadow: var(--surface-overlay-shadow);
     z-index: 1;
+    overflow-y: auto;
+    max-height: calc(min(var(--vhf) / 2, var(--item-height) * 10));
+
+    &[data-popper-placement=top] {
+      border-radius: 4px 4px 0 0;
+    }
+
+    &[data-popper-placement=bottom] {
+      border-radius: 0 0 4px 4px;
+    }
   }
 
   &__option {
     padding: 8px 12px;
+    cursor: pointer;
 
     &:hover {
       background-color: var(--surface-c);
+    }
+
+    &_selected {
+      background-color: var(--primary-color);
+      color: var(--primary-color-text);
+
+      &:hover {
+        background-color: var(--primary-color-hover);
+      }
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    transform: rotate(180deg);
+  }
+
+  &__open {
+    .ui-select__arrow {
+      transform: rotate(0deg);
+    }
+
+    .ui-select__list {
+      &[data-popper-placement=top] + .ui-select__input {
+        border-radius: 0 0 4px 4px;
+      }
+
+      &[data-popper-placement=bottom] + .ui-select__input {
+        border-radius: 4px 4px 0 0;
+      }
     }
   }
 }
