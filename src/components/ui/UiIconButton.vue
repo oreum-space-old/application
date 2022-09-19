@@ -1,7 +1,6 @@
 <template>
-  <table>
-    <!-- TODO -->
-  </table>
+  todo
+  <!-- TODO -->
 </template>
 
 <script

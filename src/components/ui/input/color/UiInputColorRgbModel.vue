@@ -4,19 +4,19 @@
       label="Red"
       :model-value="v.r"
       :background="[ `rgb(0, ${v.g}, ${v.b})`, `rgb(255, ${v.g}, ${v.b})` ]"
-      @update:model-value="v = { model, r: $event, g: v.g, b: v.b }"
+      @update:model-value="v = { model: 'RGB', r: $event, g: v.g, b: v.b }"
     />
     <ui-input-color-slider
       label="Green"
       :model-value="v.g"
       :background="[ `rgb(${v.r}, 0, ${v.b})`, `rgb(${v.r}, 255, ${v.b})` ]"
-      @update:model-value="v = { model, r: v.r, g: $event, b: v.b }"
+      @update:model-value="v = { model: 'RGB', r: v.r, g: $event, b: v.b }"
     />
     <ui-input-color-slider
       label="Blue"
       :model-value="v.b"
       :background="[ `rgb(${v.r}, ${v.g}, 0)`, `rgb(${v.r}, ${v.g}, 255)` ]"
-      @update:model-value="v = { model, r: v.r, g: v.g, b: $event }"
+      @update:model-value="v = { model: 'RGB', r: v.r, g: v.g, b: $event }"
     />
   </div>
 </template>

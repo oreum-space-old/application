@@ -7,7 +7,7 @@
       :scale="1"
       :max="359"
       round
-      @update:model-value="v = { model, h: $event, s: v.s, v: v.v }"
+      @update:model-value="v = { model: 'HSV', h: $event, s: v.s, v: v.v }"
     />
     <ui-input-color-slider
       label="Saturation"
@@ -17,7 +17,7 @@
         `hsl(${v.h}deg, 0%, ${v.v / 2}%)`,
         `hsl(${v.h}deg, 100%, ${v.v / 2}%)`
       ]"
-      @update:model-value="v = { model, h: v.h, s: display($event), v: v.v }"
+      @update:model-value="v = { model: 'HSV', h: v.h, s: display($event), v: v.v }"
     />
     <ui-input-color-slider
       label="Value"
@@ -27,7 +27,7 @@
         `hsl(${v.h}deg, ${v.s}%, 0%)`,
         `hsl(${v.h}deg, ${v.s}%, 50%)`
       ]"
-      @update:model-value="v = { model, h: v.h, s: v.s, v: display($event) }"
+      @update:model-value="v = { model: 'HSV', h: v.h, s: v.s, v: display($event) }"
     />
   </div>
 </template>
@@ -37,12 +37,11 @@
   lang="ts"
 >
 import UiInputColorSlider from '@/components/ui/input/color/UiInputColorSlider.vue'
-import type { ColorModel, ColorValueHSV } from '@/components/ui/input/color/index'
+import type { ColorValueHSV } from '@/components/ui/input/color/index'
 import { computed } from 'vue'
 
 type Props = {
   value: Omit<ColorValueHSV, 'value'>
-  model: ColorModel
 }
 const
   props = defineProps<Props>(),

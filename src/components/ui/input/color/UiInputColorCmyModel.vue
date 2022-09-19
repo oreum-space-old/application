@@ -8,7 +8,7 @@
         `rgb(0, ${Math.round((1 - v.m) * 255)}, ${Math.round((1 - v.y) * 255)})`
       ]"
       :display="display"
-      @update:model-value="v = { model, c: $event / 255, m: v.m, y: v.y }"
+      @update:model-value="v = { model: 'CMY', c: $event / 255, m: v.m, y: v.y }"
     />
     <ui-input-color-slider
       label="Magenta"
@@ -17,7 +17,7 @@
         `rgb(${Math.round((1 - v.c) * 255)}, 255, ${Math.round((1 - v.y) * 255)})`,
         `rgb(${Math.round((1 - v.c) * 255)}, 0, ${Math.round((1 - v.y) * 255)})`
       ]"
-      @update:model-value="v = { model, c: v.c, m: $event / 255, y: v.y }"
+      @update:model-value="v = { model: 'CMY', c: v.c, m: $event / 255, y: v.y }"
     />
     <ui-input-color-slider
       label="Yellow"
@@ -26,7 +26,7 @@
         `rgb(${Math.round((1 - v.c) * 255)}, ${Math.round((1 - v.m) * 255)}, 255)`,
         `rgb(${Math.round((1 - v.c) * 255)}, ${Math.round((1 - v.m) * 255)}, 0)`
       ]"
-      @update:model-value="v = { model, c: v.c, m: v.m, y: $event / 255 }"
+      @update:model-value="v = { model: 'CMY', c: v.c, m: v.m, y: $event / 255 }"
     />
   </div>
 </template>
@@ -36,13 +36,13 @@
   lang="ts"
 >
 import UiInputColorSlider from '@/components/ui/input/color/UiInputColorSlider.vue'
-import type { ColorModel, ColorValueCMY } from '@/components/ui/input/color/index'
+import type { ColorValueCMY } from '@/components/ui/input/color/index'
 import { computed } from 'vue'
 
 type Props = {
   value: Omit<ColorValueCMY, 'value'>
-  model: ColorModel
 }
+
 const
   props = defineProps<Props>(),
   emits = defineEmits<{ (e: 'setValue', value: Props['value']): void }>(),

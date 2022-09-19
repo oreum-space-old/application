@@ -77,8 +77,6 @@
             </span>
           </span>
         </template>
-        <template v-else-if="colorModel.value === 'hsl'">
-        </template>
         <template v-else-if="colorModel.value === 'hsv'">
           <ui-color-slider
             :model-value="Math.round(sv.s * 100)"
@@ -105,6 +103,7 @@
   lang="ts"
 >
 import UiColorSlider from '@/components/ui/UiColorSlider.vue'
+import appPreventOverflow from '@/consts/appPreventOverflow'
 import updateVisibility from '@/library/updateVisibility'
 import { createPopper, flip, Instance } from '@popperjs/core'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -158,10 +157,9 @@ const
   }),
   r = computed<number>({
     get () {
-      const result = (value.value >> (
+      return (value.value >> (
         props.alpha ? 24 : 16
       )) & 0xff
-      return result
     },
     set (_: number): void {
       value.value = value.value & (props.alpha ? 0x00ffffff : 0x00ffff) | (_ << (props.alpha ? 24 : 16))
@@ -394,13 +392,7 @@ onMounted(() => {
     popper = createPopper(button.value, popover.value, {
       modifiers: [
         flip,
-        {
-          name: 'preventOverflow',
-          options: {
-            altAxis: true,
-            padding: 8
-          }
-        },
+        appPreventOverflow,
         {
           name: 'offset',
           options: {

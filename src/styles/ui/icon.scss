@@ -6,6 +6,24 @@
   }
 
   use {
-    fill: var(--text-color);
+    fill: currentColor; // var(--text-color);
+  }
+
+  &_button {
+    cursor: pointer;
+    border-radius: 4px;
+    outline: none;
+
+    &:focus {
+      background-color: var(--secondary-color-focus-text);
+    }
+
+    &:hover {
+      background-color: var(--secondary-color-hover-text);
+    }
+
+    &:active {
+      background-color: var(--secondary-color-active-text);
+    }
   }
 }

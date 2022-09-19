@@ -45,60 +45,32 @@
         <ui-select
           :model-value="{ display: colorModel, value: colorModel }"
           :options="COLOR_MODELS.map(_ => ({ display: _, value: _ }))"
-          @update:model-value="colorModel = $event.value"
+          @update:model-value="setColorModel"
         >
           <template #option="{ option }">
             <div class="ui-input-color__color-model ui-input-color__color-model_option">
               <b>{{ option.display }}</b>
-              <small>{{ this[`value${ option.value }`].value }}</small>
+              <small>{{ getValue(option?.value).value }}</small>
             </div>
           </template>
           <template #selected="{ selected, close }">
             <div class="ui-input-color__color-model">
-              <b>{{ selected.display }}</b>
+              <b>{{ selected?.display }}</b>
               <small
-                class="small-small"
+                class="ui-input-color__copy-color-model small-small"
                 @click="copyColorModelValue($event); close()"
               >
-                {{ this[`value${selected.value}`].value }}
+                {{ getValue(selected?.value).value }}
               </small>
             </div>
           </template>
         </ui-select>
         <component
           :is="colorModelForm"
-          :value="this[`value${colorModel}`]"
+          :value="getValue(colorModel)"
           :model="colorModel"
           @set-value="setValue"
         />
-        <!--
-        <div
-          style="
-            position: absolute;
-            display: flex;
-            flex-flow: row wrap;
-            bottom: calc(100%);
-            gap: 8px;
-            left: 0;
-            padding: 8px;
-            width: 66vw;
-            max-width: 66vw
-          "
-        >
-          <code
-            v-for="_model of COLOR_MODELS"
-            :key="_model"
-            style="min-width: 256px; box-shadow: var(&#45;&#45;surface-overlay-shadow)"
-          >
-            <small style="color: greenyellow">debug </small>
-            <small
-              v-for="(_value, key) in this[`value${_model}`]"
-              :key="key"
-            >
-              {{ key[0] }}: {{ _value }}<br>
-            </small>
-          </code>
-        </div>-->
       </div>
       <div
         class="ui-input-color__popover-arrow"
@@ -112,14 +84,18 @@
   setup
   lang="ts"
 >
-import UiSelect from '@/components/UiSelect.vue'
+import type {
+  ColorModel, ColorValueCMY, ColorValueHEX, ColorValueHSL, ColorValueHSV,
+  ColorValueRaw, ColorValueRGB, ColorValueRGBLike
+} from '.'
+import type { Component } from 'vue'
+import UiSelect, { UiSelectValue } from '@/components/UiSelect.vue'
+import appPreventOverflow from '@/consts/appPreventOverflow'
 import updateVisibility from '@/library/updateVisibility'
 import { createPopper, flip, Instance } from '@popperjs/core'
-import type { Component } from 'vue'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   COLOR_MODELS,
-  ColorModel, ColorValue, ColorValueCMY, ColorValueHEX, ColorValueHSL, ColorValueHSV, ColorValueRGB, ColorValueRGBLike,
   getColorModelComponent, hslToRgb, hsvToRgb, rgbToHsl, rgbToHsv,
   valueCMYValue, valueHEXValue, valueHSLValue, valueHSVValue, valueRGBValue
 } from '.'
@@ -243,34 +219,44 @@ function boxPointerDown (event: PointerEvent) {
   }
 }
 
-function setValue (v: ModelValue | Omit<ColorValue, 'value'>): void {
+function setValue (v: ModelValue | ColorValueRaw): void {
   let rgb: ColorValueRGBLike
+
   if (typeof v !== 'object') {
     emits('update:modelValue', v)
     const n = typeof v === 'string' ? parseInt(v, 16) : v
-    rgb = { r: n >> 16 & 0xff, g: n >> 8 & 0xff, b: n & 0xff }
+    rgb = {
+      r: n >> 16 & 0xff,
+      g: n >> 8 & 0xff,
+      b: n & 0xff
+    }
   } else {
     if (v.model === COLOR_MODELS[0] || v.model === COLOR_MODELS[1]) {
       rgb = {
-        r: (v as ColorValueRGB).r,
-        g: (v as ColorValueRGB).g,
-        b: (v as ColorValueRGB).b
+        r: v.r,
+        g: v.g,
+        b: v.b
       }
     } else if (v.model === COLOR_MODELS[2]) {
-      valueCMY.value = { ...(v as ColorValueCMY), value: valueCMYValue((v as ColorValueCMY), alpha.value) }
+      valueCMY.value = {
+        ...v,
+        value: valueCMYValue(v, alpha.value)
+      }
       rgb = {
-        r: Math.round((1 - (v as ColorValueCMY).c) * 255),
-        g: Math.round((1 - (v as ColorValueCMY).m) * 255),
-        b: Math.round((1 - (v as ColorValueCMY).y) * 255)
+        r: Math.round((1 - v.c) * 255),
+        g: Math.round((1 - v.m) * 255),
+        b: Math.round((1 - v.y) * 255)
       }
     } else if (v.model === COLOR_MODELS[3]) {
-      valueHSL.value = v as ColorValueHSL
-      valueHSL.value.value = valueHSLValue(v as ColorValueHSL)
-      rgb = hslToRgb(v as ColorValueHSL)
+      rgb = hslToRgb(valueHSL.value = {
+        ...v,
+        value: valueHSLValue(v)
+      })
     } else {
-      valueHSV.value = v as ColorValueHSV
-      valueHSV.value.value = valueHSVValue(v as ColorValueHSV)
-      rgb = hsvToRgb(v as ColorValueHSV)
+      rgb = hsvToRgb(valueHSV.value = {
+        ...v,
+        value: valueHSVValue(v)
+      })
     }
     emits(
       'update:modelValue',
@@ -279,18 +265,35 @@ function setValue (v: ModelValue | Omit<ColorValue, 'value'>): void {
         : rgb.r << 16 + rgb.g << 8 + rgb.b
     )
   }
-
-  valueHEX.value = { model: COLOR_MODELS[0], ...rgb, value: valueHEXValue(rgb, alpha.value) }
-  valueRGB.value = { model: COLOR_MODELS[1], ...rgb, value: valueRGBValue(rgb, alpha.value) }
-  if (typeof v === 'object' && v.model !== COLOR_MODELS[2]) {
-    const cmy = { c: 1 - rgb.r / 0xff, m: 1 - rgb.g / 0xff, y: 1 - rgb.b / 0xff }
-    valueCMY.value = { model: COLOR_MODELS[2], ...cmy, value: valueCMYValue(cmy, alpha.value) }
+  valueHEX.value = {
+    model: COLOR_MODELS[0],
+    ...rgb,
+    value: valueHEXValue(rgb, alpha.value)
   }
-  if (typeof v === 'object' && v.model !== COLOR_MODELS[3]) {
-    valueHSL.value = rgbToHsl(valueRGB.value, alpha.value, valueHSL.value.h)
+  valueRGB.value = {
+    model: COLOR_MODELS[1],
+    ...rgb,
+    value: valueRGBValue(rgb, alpha.value)
   }
-  if (typeof v === 'object' && v.model !== COLOR_MODELS[4]) {
-    valueHSV.value = rgbToHsv(valueRGB.value, alpha.value, valueHSV.value.h)
+  if (typeof v === 'object') {
+    if (v.model !== COLOR_MODELS[2]) {
+      const cmy = {
+        c: 1 - rgb.r / 0xff,
+        m: 1 - rgb.g / 0xff,
+        y: 1 - rgb.b / 0xff
+      }
+      valueCMY.value = {
+        model: COLOR_MODELS[2],
+        ...cmy,
+        value: valueCMYValue(cmy, alpha.value)
+      }
+    }
+    if (v.model !== COLOR_MODELS[3]) {
+      valueHSL.value = rgbToHsl(valueRGB.value, alpha.value, valueHSL.value.h)
+    }
+    if (v.model !== COLOR_MODELS[4]) {
+      valueHSV.value = rgbToHsv(valueRGB.value, alpha.value, valueHSV.value.h)
+    }
   }
 }
 
@@ -328,13 +331,7 @@ onMounted(() => {
             padding: 12,
           }
         },
-        {
-          name: 'preventOverflow',
-          options: {
-            altAxis: true,
-            padding: 8
-          }
-        },
+        appPreventOverflow,
         {
           name: 'offset',
           options: {
@@ -357,7 +354,7 @@ onBeforeUnmount(() => {
   removeEventListener('pointerdown', pointerdownHandler)
 })
 
-function copyColorModelValue (event: PointerEvent) {
+function copyColorModelValue (event: Event) {
   const target = event.target as HTMLElement
 
   if (navigator.clipboard) {
@@ -365,6 +362,20 @@ function copyColorModelValue (event: PointerEvent) {
   } else {
     console.warn('Clipboard API are not available!')
   }
+}
+
+const pseudoContext = [valueHEX, valueRGB, valueCMY, valueHSL, valueHSV]
+
+function getValue (model: string | undefined): { value: string } {
+  return model
+    ? pseudoContext[(
+      COLOR_MODELS as Readonly<string[]>
+    ).indexOf(model)].value
+    : { value: 'unknown' }
+}
+
+function setColorModel (v: UiSelectValue) {
+  colorModel.value = COLOR_MODELS.find(_ => _ === v.value) || COLOR_MODELS[0]
 }
 </script>
 
@@ -459,17 +470,21 @@ function copyColorModelValue (event: PointerEvent) {
     gap: 8px;
   }
 
+  &__copy-color-model {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    padding: 4px;
+    margin: -4px 0;
+    font-size: 13px;
+    cursor: copy;
+  }
+
   &__color-model {
     display: flex;
     flex-flow: row nowrap;
     gap: 8px;
     white-space: nowrap;
     justify-content: space-between;
-
-    &:not(&_option) small {
-      font-size: 13px;
-      cursor: copy;
-    }
   }
 }
 

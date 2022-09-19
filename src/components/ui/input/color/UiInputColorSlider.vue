@@ -76,7 +76,7 @@ const
     }
   })
 
-function inputNumberHandler (event: InputEvent) {
+function inputNumberHandler (event: Event) {
   const target = event.target as HTMLInputElement | null
   if (target) {
     const asNumber = target.valueAsNumber

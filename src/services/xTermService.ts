@@ -1,21 +1,20 @@
 import { api } from '@/consts/envs'
-import WebSocketSafe, { Receivers } from '@/library/wss'
+import WebSocketSafe from '@/library/wss'
 import type { Terminal } from 'xterm'
 
-const utf8 = new TextDecoder('utf-8')
+// const utf8 = new TextDecoder('utf-8')
 
 type TerminalAuthorization = unknown
 
-const terminalReceivers = {
-  write (this: XTermSession, data: { data: ArrayBuffer, type: 'Buffer' }) {
-    if (this.xTerm) {
-      this.xTerm.write(new Uint8Array(data.data))
-    }
-  }
-} as Receivers<XTermSession>
+// const terminalReceivers = {
+//   write (this: XTermSession, data: { data: ArrayBuffer, type: 'Buffer' }) {
+//     if (this.xTerm) {
+//       this.xTerm.write(new Uint8Array(data.data))
+//     }
+//   }
+// } as Receivers<XTermSession>
 
 class XTermSession extends WebSocketSafe {
-  receivers = terminalReceivers
   xTerm: Terminal
   constructor (xTerm: Terminal, data?: TerminalAuthorization) {
     super(new URL(`wss://${api.host}/terminal`))

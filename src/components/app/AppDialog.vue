@@ -22,7 +22,7 @@ const
   dialog = useDialog(),
   aside = ref<HTMLElement>()
 
-function click (event: PointerEvent): void {
+function click (event: Event): void {
   const path = event.composedPath()
 
   if (aside.value) {
@@ -54,7 +54,7 @@ function hide () {
   background-repeat: no-repeat;
   background-position-y: calc(var(--vhf) * -2);
   background-size: 100% 300%;
-  transition: 0.5s ease-in-out;
+  transition: 0.25s ease-in-out;
   z-index: 10;
   pointer-events: none;
   opacity: 0;

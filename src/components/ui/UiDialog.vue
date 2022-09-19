@@ -12,15 +12,15 @@
         <header class="ui-dialog__header">
           <slot name="header-with-button">
             <slot name="header">
-              <h4 class="h4">
+              <h4 class="h5">
                 Dialog
               </h4>
             </slot>
-            <button>
-              <ui-icon
-                icon="rules"
-              />
-            </button>
+            <ui-icon
+              icon="close-small"
+              button
+              @click="close"
+            />
           </slot>
         </header>
         <main class="ui-dialog__main">
@@ -36,9 +36,9 @@
             <ui-button
               appearance="outlined"
               seriousness="passive"
-              @click="dialogState.close(name)"
+              @click="close"
             >
-              Close
+              Закрыть
             </ui-button>
           </slot>
         </footer>
@@ -70,11 +70,16 @@ onMounted(() => {
   }
 })
 
-function click (event: PointerEvent) {
+function click (event: Event) {
   console.log(event.composedPath())
 }
 
 function keydownEsc () {
+  close()
+}
+
+function close () {
+  console.log('close')
   dialogState.close(props.name)
 }
 
@@ -93,7 +98,7 @@ function keydownEsc () {
   left: 50%;
   top: 50%;
   translate: calc(-50%) calc(-50% - 32px);
-  transition: translate 0.25s;
+  transition: translate 0.25s ease-in-out;
 
   border-radius: 8px;
 
@@ -101,6 +106,7 @@ function keydownEsc () {
     display: flex;
     flex-flow: column;
     translate: calc(-50%) -50%;
+    transition: translate 0.125s ease-in-out;
   }
 
   &__header,
@@ -109,7 +115,12 @@ function keydownEsc () {
     padding: 12px 16px;
   }
 
+  &__header {
+    box-shadow: 0 3px 5px rgb(0 0 0 / 2%), 0 0 2px rgb(0 0 0 / 5%), 0 1px 4px rgb(0 0 0 / 8%);
+  }
+
   &__main {
+    padding: 16px;
     min-height: 92px;
     min-width: 240px;
   }

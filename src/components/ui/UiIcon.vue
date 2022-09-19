@@ -1,12 +1,22 @@
 <template>
   <svg
     class="ui-icon"
-    :width="width"
-    :height="height"
-    :style="style"
+    :class="classes"
+    :tabindex="button && '0'"
+    :role="button && 'button'"
+    width="24"
+    height="24"
+    :style="{
+      rotate: rotate && `${rotate}deg`
+    }"
     xmlns="http://www.w3.org/2000/svg"
+    @click="keydown"
+    @keydown.enter.space="keydown"
+    @keyup.enter.space="keyup"
   >
-    <use :href="`${icons}#${icon}`" />
+    <use
+      :href="`${icons}#${icon}`"
+    />
   </svg>
 </template>
 
@@ -15,20 +25,39 @@
   lang="ts"
 >
 import icons from '@/assets/icons.svg'
-import { computed } from 'vue'
+import { isRef, ref } from 'vue'
 
-type Props = {
+export interface UiIconProps {
   icon: string
-  width?: number
-  height?: number
   rotate?: string
+  button?: true
 }
 
 const
-  props = withDefaults(defineProps<Props>(), {
+  props = withDefaults(defineProps<UiIconProps>(), {
     width: 24,
     height: 24,
-    rotate: undefined
+    rotate: undefined,
+    button: undefined
   }),
-  style = computed(() => props.rotate ? { transform: `rotate(${props.rotate}deg)` } : undefined)
+  active = props.button ? ref<boolean>(false) : undefined,
+  classes = {
+    'ui-icon_button': props.button,
+    'ui-icon_active': isRef(active) && active.value
+  },
+  emits = defineEmits<{ (e: 'click'): void }>()
+
+function keydown () {
+  if (isRef(active)) {
+    active.value = true
+    emits('click')
+  }
+}
+
+function keyup () {
+  if (isRef(active)) {
+    active.value = false
+  }
+}
+
 </script>

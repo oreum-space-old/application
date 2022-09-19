@@ -1,11 +1,11 @@
 /* eslint-disable no-control-regex */
-import WebSocketSafe, { Receivers } from '@/library/wss'
+import WebSocketSafe from '@/library/wss'
 import { api } from '@/consts/envs'
 import { reactive } from 'vue'
 
-const utf8 = new TextDecoder('utf-8')
+/* const utf8 = new TextDecoder('utf-8') */
 
-const COLORS = {
+/* const COLORS = {
   '30': 'var(--terminal-b)',
   '40': 'var(--terminal-b)',
   '91': 'var(--ANSI-red)',
@@ -38,7 +38,7 @@ const COLORS = {
   '46': 'var(--ANSI-dark-cyan-b)',
   '97': 'var(--ANSI-white)',
   '107': 'var(--ANSI-white-b)'
-} as Record<string, string | undefined>
+} as Record<string, string | undefined> */
 
 type ANSI = {
   id: number,
@@ -49,9 +49,9 @@ type ANSI = {
   cursor?: boolean
 }
 
-let id = 0
+/* let id = 0 */
 
-function oneEscape (state: State, prev: ANSI, string: string): ANSI {
+/* function oneEscape (state: State, prev: ANSI, string: string): ANSI {
   const result = { ...prev }
   let cut = 0
   let match: RegExpMatchArray | null = null
@@ -127,23 +127,23 @@ function oneEscape (state: State, prev: ANSI, string: string): ANSI {
       cut = 5
       result.background = undefined
     }
-    else if ((match = string.match(/\x1b\[\d+(x|y|u|t)/))) {
+    else if ((match = string.match(/\x1b\[\d+([xyut])/))) {
       cut = match[0].length
     }
   }
   result.text = string.slice(cut)
   return result
-}
+} */
 
-let current: ANSI = {
+/* let current: ANSI = {
   id: id++,
   text: '',
   color: undefined,
   background: undefined,
   textDecoration: undefined
-}
+} */
 
-function escapeParser (state: State, buffer: Uint8Array): void {
+/* function escapeParser (state: State, buffer: Uint8Array): void {
   const parts: Array<string> = []
   const string = utf8.decode(buffer)
   let pointer = 0
@@ -179,13 +179,13 @@ function escapeParser (state: State, buffer: Uint8Array): void {
     }
   }
   console.groupEnd()
-}
+} */
 
-const terminalReceivers = {
-  write (this: TerminalSession, data: { data: ArrayBuffer, type: 'Buffer' }) {
-    escapeParser(this.state, new Uint8Array(data.data))
-  }
-} as Receivers<TerminalSession>
+// const terminalReceivers = {
+//   write (this: TerminalSession, data: { data: ArrayBuffer, type: 'Buffer' }) {
+//     escapeParser(this.state, new Uint8Array(data.data))
+//   }
+// } as Receivers<TerminalSession>
 
 type TerminalAuthorization = {
   username: string
@@ -204,11 +204,10 @@ class TerminalSession extends WebSocketSafe {
     status: 'created',
     console: []
   })
-  receivers = terminalReceivers
   constructor (data?: TerminalAuthorization) {
     super(new URL(`wss://${api.host}/terminal`))
 
-    this.onopen = (event) => {
+    this.onopen = () => {
       // console.log('onopen', event)
       this.state.status = 'opened'
       if (data) {

@@ -1,7 +1,7 @@
 export type Receivers<T> = Record<string, (this: T, data: unknown) => void>
 
 export default class WebSocketSafe extends WebSocket {
-  protected receivers: Receivers<any> = {}
+  protected receivers: Receivers<unknown> = {}
 
   constructor (url: URL) {
     super(url)

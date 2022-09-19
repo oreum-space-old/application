@@ -16,7 +16,7 @@
       @click="!item.items && collapse()"
     >
       <router-link
-        v-if="item.to && router.hasRoute(item.to.name)"
+        v-if="item.to"
         :to="item.to"
         class="ui-menu-bar__button"
         :class="{ 'ui-menu-bar__button_opened': opened === index }"
@@ -88,7 +88,6 @@
 >
 import UiIcon from '@/components/ui/UiIcon.vue'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
 
 interface ItemRaw {
@@ -130,8 +129,7 @@ const props = defineProps<{
     (e: 'collapse'): void
   }>(),
   root = ref<HTMLUListElement>(),
-  opened = ref<number>(NaN),
-  router = useRouter()
+  opened = ref<number>(NaN)
 
 function collapse () {
   emits('collapse')

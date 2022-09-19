@@ -16,7 +16,7 @@
     >
       <div
         v-for="option of options"
-        :key="option"
+        :key="option.value"
         class="ui-select__option"
         :class="{ 'ui-select__option_selected': option.value === (modelValue?.value || '_') }"
         @click="updateModelValue(option); close()"
@@ -72,11 +72,12 @@
   lang="ts"
 >
 import UiIcon from '@/components/ui/UiIcon.vue'
+import appPreventOverflow from '@/consts/appPreventOverflow'
 import updateVisibility from '@/library/updateVisibility'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { createPopper, flip, preventOverflow, Instance } from '@popperjs/core'
+import { createPopper, flip, Instance } from '@popperjs/core'
 
-type UiSelectValue = {
+export type UiSelectValue = {
   display: string
   value: string
 }
@@ -147,7 +148,7 @@ function updateModelValue (value: UiSelectValue | number) {
 onMounted(() => {
   if (input.value && list.value) {
     popper = createPopper(input.value, list.value, {
-      modifiers: [flip, preventOverflow],
+      modifiers: [flip, appPreventOverflow],
       onFirstUpdate: _updateVisibility
     })
   }

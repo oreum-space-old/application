@@ -21,6 +21,7 @@ import AppHeader from '@/components/app/AppHeader.vue'
 import useApp from '@/stores/app'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+
 useApp()
 const route = useRoute()
 const dialog = ref<HTMLDialogElement>()

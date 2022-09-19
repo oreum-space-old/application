@@ -8,47 +8,64 @@ export type ColorModel = typeof COLOR_MODELS[number]
 
 export type ValueOnly<T> = Omit<T, 'model' | 'value'>
 
-export type ColorValueHEX = {
-  model: ColorModel[0],
+type ColorValueHEXRaw = {
+  model: 'HEX',
   r: number, // 0 - 255
   g: number, // 0 - 255
   b: number, // 0 - 255
+}
+
+export type ColorValueHEX = {
   value: `#${string}`
+} & ColorValueHEXRaw
+
+type ColorValueRGBRaw = {
+  model: 'RGB',
+  r: number, // 0 - 255
+  g: number, // 0 - 255
+  b: number, // 0 - 255
 }
 
 export type ColorValueRGB = {
-  model: ColorModel[1],
-  r: number, // 0 - 255
-  g: number, // 0 - 255
-  b: number, // 0 - 255
   value: `rgb(${number}, ${number}, ${number})` | `rgba(${number}, ${number}, ${number}, ${string})`
-}
+} & ColorValueRGBRaw
 
-export type ColorValueCMY = {
-  model: ColorModel[2],
+type ColorValueCMYRaw = {
+  model: 'CMY',
   c: number, // 0 - 1
   m: number, // 0 - 1
   y: number, // 0 - 1
-  value: `cmy(${string}, ${string}, ${string})` | `cmya(${string}, ${string}, ${string}, ${string})`
 }
 
-export type ColorValueHSL = {
-  model: ColorModel[3],
+export type ColorValueCMY = {
+  value: `cmy(${string}, ${string}, ${string})` | `cmya(${string}, ${string}, ${string}, ${string})`
+} & ColorValueCMYRaw
+
+type ColorValueHSLRaw = {
+  model: 'HSL',
   h: number, // 0 - 359.(9)
   s: number, // 0 - 100
   l: number, // 0 - 100
-  value: `hsl(${number}deg ${number}% ${number}%)` | `hsl(${number}deg ${number}% ${number}%${string})`
 }
 
-export type ColorValueHSV = {
-  model: ColorModel[4],
+export type ColorValueHSL = {
+  value: `hsl(${number}deg ${number}% ${number}%)` | `hsl(${number}deg ${number}% ${number}%${string})`
+} & ColorValueHSLRaw
+
+type ColorValueHSVRaw = {
+  model: 'HSV',
   h: number, // 0 - 359.(9)
   s: number, // 0 - 100
   v: number, // 0 - 100
-  value: `hsv(${number}deg ${number}% ${number}%)` | `hsv(${number}deg ${number}% ${number}%${string})`
 }
 
+export type ColorValueHSV = {
+  value: `hsv(${number}deg ${number}% ${number}%)` | `hsv(${number}deg ${number}% ${number}%${string})`
+} & ColorValueHSVRaw
+
 export type ColorValue = ColorValueHEX | ColorValueRGB | ColorValueCMY | ColorValueHSL | ColorValueHSV
+
+export type ColorValueRaw = ColorValueHEXRaw | ColorValueRGBRaw | ColorValueCMYRaw | ColorValueHSLRaw | ColorValueHSVRaw
 
 export type ColorValueRGBLike = Omit<ColorValueHEX | ColorValueRGB, 'value' | 'model'>
 

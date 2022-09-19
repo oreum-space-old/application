@@ -1,5 +1,6 @@
 <template>
   <div>
+    x-term
     <x-term />
   </div>
 </template>
