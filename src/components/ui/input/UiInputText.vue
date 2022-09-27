@@ -23,12 +23,15 @@
 >
 import { computed } from 'vue'
 
+export type UiInputTextAsync = 'initial' | 'sending' | 'valid' | 'invalid'
+
 const
   props = defineProps<{
     label?: string
     modelValue?: string
     invalid?: boolean
     disabled?: boolean
+    async?: UiInputTextAsync
   }>(),
   emits = defineEmits<{
   (e: 'update:modelValue', value: string): void

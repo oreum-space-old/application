@@ -4,7 +4,8 @@ const app: Array<RouteRecordRaw> = [
   {
     name: 'Welcome',
     path: '/',
-    component: () => import('@/views/WelcomeView.vue')
+    component: () => import('@/views/WelcomeView.vue'),
+    meta: { main: true }
   },
   {
     name: 'Home',

@@ -9,8 +9,8 @@ type State = {
 
 const useUser = defineStore('user', {
   state: (): State => ({
-    id: 0,
-    username: 'Oredan'
+    id: NaN,
+    username: ''
   }),
   actions: {
     initRoutes () {

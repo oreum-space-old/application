@@ -62,7 +62,7 @@ function createSession (container: HTMLElement) {
       username: '179da',
       host: 'localhost',
       port: 22,
-      password: 'vxvjlte7Pto.'
+      password: 'vxvjlte7Pto1'
     })
     xTerm.open(container)
     xTerm.onKey((data) => {

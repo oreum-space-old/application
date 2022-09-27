@@ -56,6 +56,7 @@ button,
   transition: var(--cubic) 0.2s;
   min-width: 36px;
   min-height: 36px;
+  height: 36px;
 
   &:not(&:disabled) {
     cursor: pointer;

@@ -8,6 +8,7 @@
     </ui-h>
     <ui-view-typography />
     <ui-view-inputs />
+    <ui-view-rich-text />
     <ui-view-buttons />
     <ui-view-dialog />
   </main>
@@ -21,5 +22,6 @@ import UiH from '@/components/ui/UiH.vue'
 import UiViewButtons from '@views/ui/UiViewButtons.vue'
 import UiViewDialog from '@views/ui/UiViewDialog.vue'
 import UiViewInputs from '@views/ui/UiViewInputs.vue'
+import UiViewRichText from '@views/ui/UiViewRichText.vue'
 import UiViewTypography from '@views/ui/UiViewTypography.vue'
 </script>

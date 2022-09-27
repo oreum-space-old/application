@@ -1,13 +1,16 @@
 <template>
+  <app-dialog />
   <app-header />
-  <router-view v-if="route.meta.main" />
+  <router-view
+    v-if="route.meta.main"
+    class="main"
+  />
   <main
     v-else
     class="main"
   >
     <router-view />
   </main>
-  <app-dialog />
   <app-footer @click="dialogShow" />
 </template>
 
@@ -17,7 +20,7 @@
 >
 import AppDialog from '@/components/app/AppDialog.vue'
 import AppFooter from '@/components/app/AppFooter.vue'
-import AppHeader from '@/components/app/AppHeader.vue'
+import AppHeader from '@/components/app/header/AppHeader.vue'
 import useApp from '@/stores/app'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'

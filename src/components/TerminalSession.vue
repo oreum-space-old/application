@@ -43,7 +43,7 @@ const session = ref(terminalService.newTerminalSession({
   username: '179da',
   host: 'localhost',
   port: 22,
-  password: 'vxvjlte7Pto.'
+  password: 'vxvjlte7Pto1'
 }))
 const console = computed(() => session.value.state.console)
 watch(console, () => {

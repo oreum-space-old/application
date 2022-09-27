@@ -17,18 +17,28 @@ class Dialog {
   }
 
   show () {
-    this.element.dataset.dialogOpen = 'true'
+    this.element.dataset.dialogOpen = 'showing'
+    setTimeout(() => {
+      if (this.element.dataset.dialogOpen === 'showing') {
+        this.element.dataset.dialogOpen = 'true'
+      }
+    }, 125)
     setTimeout(() => this.element.focus())
     this.update()
   }
 
   close () {
-    this.element.dataset.dialogOpen = 'false'
+    this.element.dataset.dialogOpen = 'hiding'
+    setTimeout(() => {
+      if (this.element.dataset.dialogOpen === 'hiding') {
+        this.element.dataset.dialogOpen = 'false'
+      }
+    }, 125)
     this.update()
   }
 
   get open () {
-    return this.element.dataset.dialogOpen === 'true'
+    return this.element.dataset.dialogOpen === 'true' || this.element.dataset.dialogOpen === 'showing'
   }
 }
 
@@ -90,6 +100,10 @@ const useDialog = defineStore('dialog', {
         }
         dialog.close()
       }
+    },
+    unmount (dialog: string) {
+      this.close(dialog)
+      this.dialogs = this.dialogs.filter(_ => _.name !== dialog)
     }
   }
 })
