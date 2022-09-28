@@ -43,7 +43,7 @@ import useApp from '@/stores/app'
 
 const app = useApp()
 
-function appMenuClickHandler (event: PointerEvent) {
+function appMenuClickHandler (event: MouseEvent) {
   if (event.offsetX < 0 && app.menu === 'shown') {
     app.menu = 'hidden'
   }
