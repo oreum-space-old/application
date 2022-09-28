@@ -37,7 +37,6 @@ function click (event: Event): void {
 }
 
 function hide () {
-  console.log('hide from AppDialog.vue')
   dialog.hide()
 }
 </script>
@@ -49,7 +48,7 @@ function hide () {
 .app-dialog {
   position: fixed;
   width: 100%;
-  height: var(--vhf);
+  height: calc(calc(var(--vh) * 100) - var(--header-height));
   background-image: linear-gradient(rgba(0, 0, 0, .66) 0%, rgba(0, 0, 0, .0) 100%);
   background-repeat: no-repeat;
   background-position-y: calc(var(--vhf) * -2);
@@ -58,6 +57,7 @@ function hide () {
   z-index: 10;
   pointer-events: none;
   opacity: 0;
+  top: var(--header-height);
 
   &_has {
     pointer-events: unset;

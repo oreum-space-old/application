@@ -448,7 +448,7 @@ onBeforeUnmount(() => {
     user-select: none;
     -webkit-user-drag: none;
 
-    @media (min-height: 768px) and (min-width: 768px) {
+    @media (min-height:768px) and (min-width: 768px) {
       flex-flow: row;
     }
 

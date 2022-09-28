@@ -17,10 +17,12 @@ html {
   scroll-behavior: smooth;
   max-width: 100vw;
   overflow-x: hidden;
-}
+  --header-height: 64px;
 
-body {
-  overflow-x: hidden;
+  &.menu-prevent-scrolling,
+  &.dialog-prevent-scrolling {
+    overflow-y: visible;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -38,10 +40,10 @@ body {
 
 .header {
   display: flex;
-  height: 64px;
+  height: var(--header-height);
   top: 0;
   position: fixed;
-  width: 100%;
+  width: 100vw;
   padding-block: 4px;
   z-index: 10;
   gap: 24px;
@@ -52,28 +54,23 @@ body {
   align-items: center;
 }
 
-@media (max-width: 768px) {
-  header {
-    height: 52px;
-    gap: 16px;
-  }
-
-  .app-header-logo {
-    img {
-      height: 36px;
-    }
-  }
-}
-
 body {
+  position: relative;
   display: flex;
   flex-flow: column;
   min-height: calc(var(--vhf) + 64px);
+  overflow-x: hidden;
+  padding-top: 64px;
+  max-width: 100vw;
+
+  @media (max-width: 768px)  {
+    padding-top: 48px;
+  }
 
   .main {
     min-height: calc(var(--vhf) - 64px);
     @media (max-width: 768px) {
-      min-height: calc(var(--vhf) - 52px);
+      min-height: calc(var(--vhf) - 48px);
     }
   }
 }
@@ -90,4 +87,26 @@ body {
   justify-content: space-between;
   padding-block: 12px;
   min-height: 64px;
+}
+
+@media (max-width: 768px) {
+  html {
+    --header-height: 48px;
+  }
+
+  .header {
+    gap: 8px;
+    padding: 6px 12px;
+  }
+
+  .app-header-logo {
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+
+    img {
+      display: block;
+      height: 36px;
+    }
+  }
 }

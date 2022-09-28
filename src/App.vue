@@ -22,7 +22,7 @@ import AppDialog from '@/components/app/AppDialog.vue'
 import AppFooter from '@/components/app/AppFooter.vue'
 import AppHeader from '@/components/app/header/AppHeader.vue'
 import useApp from '@/stores/app'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 useApp()
@@ -34,4 +34,7 @@ function dialogShow () {
     dialog.value.show()
   }
 }
+
+const app = useApp()
+onMounted(() => app.created())
 </script>

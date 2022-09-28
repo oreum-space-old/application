@@ -1,3 +1,4 @@
+import useApp from '@/stores/app'
 import { defineStore } from 'pinia'
 
 class Dialog {
@@ -42,6 +43,8 @@ class Dialog {
   }
 }
 
+let app: ReturnType<typeof useApp>
+
 const useDialog = defineStore('dialog', {
   state: () => ({
     dialogs: [] as Array<Dialog>,
@@ -56,6 +59,8 @@ const useDialog = defineStore('dialog', {
           result.push(dialog)
         }
       }
+
+      document.documentElement.classList[result.length ? 'add' : 'remove']('dialog-prevent-scrolling')
 
       return result
     }
@@ -79,6 +84,12 @@ const useDialog = defineStore('dialog', {
       return this.dialogs.find(_ => _.name === name)
     },
     show (dialog: Dialog | string) {
+      if (!app) {
+        app = useApp()
+      }
+      if (app.menu === 'shown') {
+        app.menu = 'hidden'
+      }
       if (dialog) {
         if (typeof dialog === 'string') {
           this.get(dialog)?.show()

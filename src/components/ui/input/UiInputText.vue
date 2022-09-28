@@ -48,10 +48,3 @@ const
     typeof props.modelValue !== 'string' || !!props.disabled)
 
 </script>
-
-<style
-  lang="scss"
-  scoped
->
-
-</style>

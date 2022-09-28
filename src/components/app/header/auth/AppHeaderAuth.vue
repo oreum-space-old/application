@@ -14,7 +14,6 @@
     >
       Регистрация
     </ui-button>
-    <app-header-auth-registration-modal />
   </div>
 </template>
 
@@ -22,22 +21,18 @@
   setup
   lang="ts"
 >
-import AppHeaderAuthRegistrationModal from '@/components/app/header/auth/AppHeaderAuthRegistrationModal.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import useDialog from '@/stores/dialog'
 
 const dialog = useDialog()
 </script>
 
-<style
-  lang="scss"
-  scoped
->
+<style lang="scss">
 .app-header-auth {
   display: flex;
   justify-content: flex-end;
-  flex: 1;
   gap: 16px;
   align-items: center;
+  flex: 1;
 }
 </style>

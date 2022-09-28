@@ -1,4 +1,6 @@
 import query from '@/library/query'
+import useApp from '@/stores/app'
+import useDialog from '@/stores/dialog'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import routes from '../routes'
 
@@ -29,5 +31,23 @@ export function addRoutes (routes: Array<RouteRecordRaw>): void {
     router.addRoute(route)
   }
 }
+
+let app: ReturnType<typeof useApp>
+let dialog: ReturnType<typeof useDialog>
+
+router.beforeEach(() => {
+  if (!dialog) {
+    dialog = useDialog()
+  }
+  if (!app) {
+    app = useApp()
+  }
+  if (app.menu === 'shown') {
+    app.menu = 'hidden'
+  }
+  if (dialog.openedDialogs.length) {
+    dialog.hide()
+  }
+})
 
 export default router

@@ -1,3 +1,4 @@
+import useDialog from '@/stores/dialog'
 import { defineStore } from 'pinia'
 import Favicon from '@/library/favicon'
 
@@ -11,6 +12,7 @@ type State = {
   height: number
   root: HTMLElement
   theme: Theme
+  menu: 'disabled' | 'shown' | 'hidden'
   favicon: Favicon
 }
 
@@ -24,11 +26,14 @@ function getLocalStorageTheme (): Theme | null {
   return result === 'light' || result === 'dark' ? result : null
 }
 
+let dialog: ReturnType<typeof useDialog>
+
 const useApp = defineStore('app', {
   state: (): State => ({
     width: window.innerWidth || 0,
     height: window.innerHeight || 0,
     root: document.documentElement,
+    menu: window.innerWidth >= 768 ? 'disabled' : 'hidden',
     theme: getLocalStorageTheme() || getThemeFromMedia() || 'dark',
     favicon
   }),
@@ -38,16 +43,43 @@ const useApp = defineStore('app', {
       addEventListener('jump', (event) => {
         console.log(event)
       })
+      this.resizeMenuHandler()
       this.resizeCssHandler()
       this.watchThemeFromMedia()
     },
     resizeHandler (): void {
       this.width = window.innerWidth || 0
       this.height = window.innerHeight || 0
+      this.resizeMenuHandler()
       this.resizeCssHandler()
     },
+    resizeMenuHandler (): void {
+      if (this.menu !== 'disabled') {
+        if (this.width >= 768) {
+          this.menu = 'disabled'
+        }
+      } else {
+        if (this.width < 768) {
+          this.menu = 'hidden'
+        }
+      }
+    },
+    hideDialog () {
+      if (!dialog) {
+        dialog = useDialog()
+      }
+      dialog.hide()
+    },
+    toggleMenu () {
+      this.menu = this.menu === 'shown' ? 'hidden' : void this.hideDialog() || 'shown'
+      document.documentElement.classList[this.menu === 'shown' ? 'add' : 'remove']('menu-prevent-scrolling')
+    },
     resizeCssHandler (): void {
-      this.root.style.setProperty('--vh', `${this.height / 100}px`)
+      const vh = `${this.height / 100}px`
+
+      if (this.getStyle('--vh') !== vh) {
+        this.root.style.setProperty('--vh', vh)
+      }
     },
     getStyle (property: string): string {
       return this.root.style.getPropertyValue(property)

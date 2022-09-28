@@ -4,7 +4,10 @@
     tabindex="0"
     role="menubar"
     class="ui-menu-bar"
-    :class="{ 'ui-menu-bar_submenu': submenu }"
+    :class="{
+      'ui-menu-bar_submenu': submenu,
+      'ui-menu-bar_column': column
+    }"
     @focusout="focusout"
   >
     <li
@@ -124,6 +127,7 @@ type Items = Readonly<Array<Item>>
 const props = defineProps<{
   items: Items
   submenu?: boolean
+  column?: boolean
 }>(),
   emits = defineEmits<{
     (e: 'collapse'): void
@@ -149,13 +153,27 @@ const pointerover = ref(props.submenu ? focusinPointeroverHandler : undefined)
 const focusin = ref(props.submenu ? undefined : focusinPointeroverHandler)
 </script>
 
-<style
-  lang="scss"
->
+<style lang="scss">
 .ui-menu-bar {
   display: flex;
   list-style: none;
   white-space: nowrap;
+
+  &_column {
+    flex-flow: column;
+
+    .ui-menu-bar__item {
+      position: relative;
+
+      &:first-child .ui-menu-bar__button {
+        border-radius: 4px 4px 0 0;
+      }
+
+      &:last-child .ui-menu-bar__button {
+        border-radius: 0 0 4px 4px;
+      }
+    }
+  }
 
   &_submenu {
     border-radius: 4px;
@@ -191,6 +209,15 @@ const focusin = ref(props.submenu ? undefined : focusinPointeroverHandler)
     color: var(--text-color);
     text-decoration: none;
     line-height: 24px;
+    background-color: transparent;
+
+    &:focus {
+      background-color: #FFFFFF16;
+    }
+
+    &:active {
+      background-color: #FFFFFF12;
+    }
 
     &_opened {
       background-color: #FFFFFF04;

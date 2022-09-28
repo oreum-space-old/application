@@ -100,17 +100,13 @@ onBeforeUnmount(() => {
 
 </script>
 
-<style
-  lang="scss"
-  scoped
->
+<style lang="scss">
 .ui-dialog {
-  position: fixed;
+  position: relative;
   --background-color: var(--surface-overlay);
   background-color: var(--background-color);
   box-shadow: var(--surface-overlay-shadow);
   height: fit-content;
-  margin: auto;
   left: 50%;
   top: 50%;
   translate: calc(-50%) calc(-50% - 16px);
@@ -118,6 +114,7 @@ onBeforeUnmount(() => {
   display: none;
   flex-flow: column;
   border-radius: 8px;
+  width: fit-content;
 
   &[data-dialog-open=hiding] {
     display: flex;
