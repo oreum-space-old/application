@@ -28,6 +28,9 @@
           :items="headerMenu"
           column
         />
+        <ui-button @click="toggleFullScreen">
+          Fullscreen
+        </ui-button>
       </nav>
     </teleport>
   </template>
@@ -37,6 +40,7 @@
   setup
   lang="ts"
 >
+import UiButton from '@/components/ui/UiButton.vue'
 import UiMenuBar from '@/components/ui/UiMenuBar.vue'
 import headerMenu from '@/options/headerMenu'
 import useApp from '@/stores/app'
@@ -45,7 +49,15 @@ const app = useApp()
 
 function appMenuClickHandler (event: MouseEvent) {
   if (event.offsetX < 0 && app.menu === 'shown') {
-    app.menu = 'hidden'
+    app.setMenu('hidden')
+  }
+}
+
+function toggleFullScreen () {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen()
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen()
   }
 }
 </script>
@@ -99,7 +111,7 @@ function appMenuClickHandler (event: MouseEvent) {
   }
 
   &__button {
-    position: absolute;
+    margin-left: auto;
     z-index: 11;
     right: 6px;
   }

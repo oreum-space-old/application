@@ -4,8 +4,8 @@
     :class="classes"
     :tabindex="button && '0'"
     :role="button && 'button'"
-    width="24"
-    height="24"
+    :width="width"
+    :height="height"
     :style="{
       rotate: rotate && `${rotate}deg`
     }"
@@ -28,6 +28,8 @@ import icons from '@/assets/icons.svg'
 import { isRef, ref } from 'vue'
 
 export interface UiIconProps {
+  width?: number
+  height?: number
   icon: string
   rotate?: string
   button?: true
@@ -36,7 +38,7 @@ export interface UiIconProps {
 const
   props = withDefaults(defineProps<UiIconProps>(), {
     width: 24,
-    height: 24,
+    height: (props) => props.width || 24,
     rotate: undefined,
     button: undefined
   }),

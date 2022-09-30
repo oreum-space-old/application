@@ -293,6 +293,7 @@ function focusout (event: FocusEvent) {
 
   &_value &__label {
     font-size: 12px;
+    line-height: 14px;
     top: -0.6rem;
     background-color: inherit;
     padding: 2px 4px;

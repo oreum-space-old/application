@@ -107,7 +107,7 @@ import appPreventOverflow from '@/consts/appPreventOverflow'
 import updateVisibility from '@/library/updateVisibility'
 import { createPopper, flip, Instance } from '@popperjs/core'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import UiSelect from '@/components/UiSelect.vue'
+import UiSelect from '@/components/ui/UiSelect.vue'
 
 const COLOR_MODELS = ['hex', 'rgb', 'hsl', 'hsv'] as const
 const colorModelsOptions = COLOR_MODELS.map(_ => ({ display: _.toUpperCase(), value: _ }))
@@ -284,7 +284,6 @@ const
         _s.value = s
         _v.value = v
       }
-      console.log(h.value / 60, s, v)
       let _r, _g, _b, i, f, p, q, t
       i = Math.floor(h.value / 60)
       f = h.value / 60 - i

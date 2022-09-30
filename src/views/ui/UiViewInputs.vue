@@ -156,6 +156,7 @@
       <ui-button
         appearance="outlined"
         seriousness="passive"
+        size="large"
         @click="selectOptionPlaceholder = null"
       >
         Reset
@@ -171,7 +172,7 @@
 import UiInputCheckBox from '@/components/ui/input/UiInputCheckBox.vue'
 import UiInputColorNew from '@/components/ui/input/color/UiInputColor.vue'
 import UiButton from '@/components/ui/UiButton.vue'
-import UiSelect from '@/components/UiSelect.vue'
+import UiSelect from '@/components/ui/UiSelect.vue'
 import { ref } from 'vue'
 import UiInputGroup from '@/components/ui/input/UiInputGroup.vue'
 import UiInputText from '@/components/ui/input/UiInputText.vue'

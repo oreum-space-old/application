@@ -6,7 +6,6 @@
       class="ui-dialog"
       :class="classes"
       :data-dialog-name="name"
-      @click="click"
       @keydown.esc="keydownEsc"
     >
       <slot name="custom">
@@ -60,7 +59,7 @@
 import UiButton from '@/components/ui/UiButton.vue'
 import UiIcon from '@/components/ui/UiIcon.vue'
 import useDialog from '@/stores/dialog'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 type Props = {
   title?: string
@@ -69,10 +68,18 @@ type Props = {
   footer?: 'disabled'
   name: string
 }
+
 const
   props = defineProps<Props>(),
+  emits = defineEmits<{
+    (e: 'show'): void
+    (e: 'hide'): void
+  }>(),
   dialog = ref<HTMLDialogElement>(),
-  dialogState = useDialog()
+  dialogState = useDialog(),
+  shown = computed(() => !!dialogState.openedDialogs.find(_ => _.name === props.name))
+
+watch(shown, () => shown.value ? emits('show') : emits('hide'))
 
 onMounted(() => {
   if (dialog.value) {
@@ -80,16 +87,11 @@ onMounted(() => {
   }
 })
 
-function click (event: Event) {
-  console.log(event.composedPath())
-}
-
 function keydownEsc () {
   close()
 }
 
 function close () {
-  console.log('close')
   dialogState.close(props.name)
 }
 

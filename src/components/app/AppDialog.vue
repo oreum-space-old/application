@@ -27,7 +27,6 @@ function click (event: Event): void {
 
   if (aside.value) {
     for (const element of path) {
-      console.dir(element)
       if ((element as unknown as { role: string }).role === 'dialog') {
         return
       }
@@ -53,7 +52,7 @@ function hide () {
   background-repeat: no-repeat;
   background-position-y: calc(var(--vhf) * -2);
   background-size: 100% 300%;
-  transition: 0.25s ease-in-out;
+  transition: opacity 0.25s ease-in-out, background 0.25s ease-in-out;
   z-index: 10;
   pointer-events: none;
   opacity: 0;

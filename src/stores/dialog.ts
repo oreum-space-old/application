@@ -88,7 +88,7 @@ const useDialog = defineStore('dialog', {
         app = useApp()
       }
       if (app.menu === 'shown') {
-        app.menu = 'hidden'
+        app.setMenu('hidden')
       }
       if (dialog) {
         if (typeof dialog === 'string') {

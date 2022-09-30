@@ -21,7 +21,6 @@ small, .small {
 
 p, span, code, pre {
   line-height: 20px;
-  color: var(--text-color);
 
   $colors: ['gray', 'primary', 'success', 'warning', 'error']; @each $color in $colors {
     .#{$color} {
@@ -33,7 +32,6 @@ p, span, code, pre {
 
 .a-header {
   padding-inline: 4px;
-  color: var(--text-color);
   text-decoration-color: transparent;
 
   &:before {

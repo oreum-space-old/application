@@ -56,11 +56,11 @@ const useApp = defineStore('app', {
     resizeMenuHandler (): void {
       if (this.menu !== 'disabled') {
         if (this.width >= 768) {
-          this.menu = 'disabled'
+          this.setMenu('disabled')
         }
       } else {
         if (this.width < 768) {
-          this.menu = 'hidden'
+          this.setMenu('hidden')
         }
       }
     },
@@ -71,8 +71,11 @@ const useApp = defineStore('app', {
       dialog.hide()
     },
     toggleMenu () {
-      this.menu = this.menu === 'shown' ? 'hidden' : void this.hideDialog() || 'shown'
-      document.documentElement.classList[this.menu === 'shown' ? 'add' : 'remove']('menu-prevent-scrolling')
+      this.setMenu(this.menu === 'shown' ? 'hidden' : void this.hideDialog() || 'shown')
+    },
+    setMenu (value: State['menu']) {
+      this.menu = value
+      document.documentElement.classList[value === 'shown' ? 'add' : 'remove']('menu-prevent-scrolling')
     },
     resizeCssHandler (): void {
       const vh = `${this.height / 100}px`

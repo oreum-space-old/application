@@ -1,10 +1,9 @@
 import type { Instance } from '@popperjs/core'
-import type { Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 
-export default function (popper: Instance | null, visible: Ref<boolean>) {
+export default function (popper: Instance | null, visible: Ref<boolean> | ComputedRef<boolean>) {
   if (popper) {
-    popper.state.elements.popper.style.visibility = visible.value ? '' : 'hidden'
-    popper.state.elements.popper.style.pointerEvents = visible.value ? '' : 'none'
+    popper.state.elements.popper.dataset['popperHidden'] = visible.value ? 'false' : 'true'
     const promise = popper.setOptions((options) => ({
       ...options,
       modifiers: [

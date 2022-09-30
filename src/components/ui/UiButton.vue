@@ -19,6 +19,7 @@ type Props = {
   type?: 'button' | 'submit' | 'reset'
   seriousness?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger' | 'passive'
   appearance?: '' | 'text' | 'outlined' | 'rounded' | 'rounded-outlined' | 'rounded-text'
+  size?: 'small' | 'large'
   disabled?: boolean
 }
 
@@ -35,7 +36,9 @@ const
     'ui-button_info': props.seriousness === 'info',
     'ui-button_warning': props.seriousness === 'warning',
     'ui-button_danger': props.seriousness === 'danger',
-    'ui-button_passive': props.seriousness === 'passive'
+    'ui-button_passive': props.seriousness === 'passive',
+    'ui-button_large': props.size === 'large',
+    'ui-button_small': props.size === 'small'
   }))
 </script>
 
@@ -54,9 +57,14 @@ button,
   font-weight: 600;
   font-family: inherit;
   transition: var(--cubic) 0.2s;
-  min-width: 36px;
-  min-height: 36px;
-  height: 36px;
+
+  &_large {
+    padding: 10px 14px;
+  }
+
+  &_small {
+    padding: 6px 10px;
+  }
 
   &:not(&:disabled) {
     cursor: pointer;
@@ -155,7 +163,17 @@ button,
     border: 1px solid var(--primary-color);
 
     border-color: currentColor;
+
+    &.ui-button_large {
+      padding: 9px 13px;
+    }
+
+    &.ui-button_small {
+      padding: 5px 9px;
+    }
   }
+
+
 
   &_rounded-outlined,
   &_rounded-text,

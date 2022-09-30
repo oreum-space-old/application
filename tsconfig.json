@@ -31,7 +31,7 @@
         "./src/assets/icons/*"
       ]
     },
-    "typeRoots": [ "src/typings" ],
+    "typeRoots": ["src/types/declare"],
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],

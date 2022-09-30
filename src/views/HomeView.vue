@@ -1,10 +1,11 @@
 <template>
   <main class="main main_home home">
-    <img
-      class="home__logo"
-      src="@/assets/logo/logo.svg"
-      alt="OreumSpace"
-    >
+    <svg class="home__logo">
+      <use
+        :href="`${oreumLogo}#svg`"
+        color="var(--surface-900)"
+      />
+    </svg>
     <div
       class="home__news"
     >
@@ -36,6 +37,7 @@
   setup
   lang="ts"
 >
+import oreumLogo from '@/assets/logo/oreum-logo.svg'
 import UiCard from '@/components/ui/UiCard.vue'
 import UiH from '@/components/ui/UiH.vue'
 </script>
@@ -50,7 +52,7 @@ import UiH from '@/components/ui/UiH.vue'
   grid-template-rows: auto auto;
   gap: 24px;
 
-  &__logo {
+  &__logo, &__logo use {
     width: 100%;
     max-width: 576px;
     margin: auto;

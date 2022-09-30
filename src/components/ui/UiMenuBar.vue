@@ -191,6 +191,10 @@ const focusin = ref(props.submenu ? undefined : focusinPointeroverHandler)
   &__item {
     position: relative;
 
+    a {
+      color: var(--text-color);
+    }
+
     &:first-child .ui-menu-bar__button {
       border-radius: 4px 0 0 4px;
     }

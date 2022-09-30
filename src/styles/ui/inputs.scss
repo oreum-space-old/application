@@ -17,7 +17,7 @@ textarea {
   appearance: none;
   color: var(--text-color);
   font-size: 16px;
-  line-height: 16px;
+  line-height: 20px;
   border-radius: 4px;
   font-family: var(--default-font-family);
   width: 240px;
@@ -61,6 +61,7 @@ textarea {
   &:not(:placeholder-shown) ~ &-label,
   &:enabled:focus ~ &-label {
     font-size: 12px;
+    line-height: 14px;
     top: -0.6rem;
     background-color: var(--background-color);
     padding: 2px 4px;
@@ -106,7 +107,11 @@ textarea {
   & > .ui-input-wrapper:not(:last-child) > .ui-input {
     border-bottom-right-radius: 0 !important;
     border-top-right-radius: 0 !important;
-    border-right-width: 0;
+  }
+
+  & > .ui-input-wrapper:not(:last-child) {
+    margin-right: -1px;
+    margin-bottom: -1px;
   }
 }
 
@@ -117,7 +122,7 @@ textarea {
   justify-content: center;
   width: 20px;
   height: 20px;
-  border: 2px solid #ffffffb3;
+  border: 2px solid var(--text-color);
   box-shadow: 0 0 1px 0 rgb(206 147 216 / 4%);
   transition: 0.25s;
 

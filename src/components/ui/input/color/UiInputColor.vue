@@ -60,7 +60,10 @@
                 class="ui-input-color__copy-color-model small-small"
                 @click="copyColorModelValue($event); close()"
               >
-                {{ getValue(selected?.value).value }}
+                <ui-icon
+                  :width="12"
+                  icon="copy-small"
+                />{{ getValue(selected?.value).value }}
               </small>
             </div>
           </template>
@@ -84,12 +87,13 @@
   setup
   lang="ts"
 >
+import UiIcon from '@/components/ui/UiIcon.vue'
 import type {
   ColorModel, ColorValueCMY, ColorValueHEX, ColorValueHSL, ColorValueHSV,
   ColorValueRaw, ColorValueRGB, ColorValueRGBLike
 } from '.'
 import type { Component } from 'vue'
-import UiSelect, { UiSelectValue } from '@/components/UiSelect.vue'
+import UiSelect, { UiSelectValue } from '@/components/ui/UiSelect.vue'
 import appPreventOverflow from '@/consts/appPreventOverflow'
 import updateVisibility from '@/library/updateVisibility'
 import { createPopper, flip, Instance } from '@popperjs/core'
@@ -213,7 +217,6 @@ function boxPointerDown (event: PointerEvent) {
 
   if (target) {
     rects = target.getBoundingClientRect()
-    console.log(event)
     addEventListener('pointermove', pointerMoveHandle)
     addEventListener('pointerup', pointerUpHandler, { once: true })
   }
@@ -357,8 +360,14 @@ onBeforeUnmount(() => {
 function copyColorModelValue (event: Event) {
   const target = event.target as HTMLElement
 
-  if (navigator.clipboard) {
+  if (navigator.clipboard && !target.classList.contains('ui-input-color__copy-color-model_copied')) {
     navigator.clipboard.writeText(target.innerText)
+    target.classList.add('ui-input-color__copy-color-model_copied')
+    setTimeout(() => {
+      if (target && target.parentElement) {
+        target.classList.remove('ui-input-color__copy-color-model_copied')
+      }
+    }, 3000)
   } else {
     console.warn('Clipboard API are not available!')
   }
@@ -472,11 +481,35 @@ function setColorModel (v: UiSelectValue) {
 
   &__copy-color-model {
     background-color: var(--primary-color);
+    color: var(--primary-color-text);
     border-radius: 4px;
-    padding: 4px;
-    margin: -4px 0;
-    font-size: 13px;
+    padding: 2px 4px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    max-height: 20px;
+    margin-right: 8px;
     cursor: copy;
+    max-width: 128px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    gap: 4px;
+    transition: outline 0.25s ease-in-out,
+    color 0.25s ease-in-out,
+    background-color 0.25s ease-in-out;
+    align-items: center;
+
+    &_copied {
+      outline-offset: -1px;
+      outline: 1px solid var(--primary-color);
+      color: var(--primary-color);
+      background-color: transparent;
+    }
+
+    svg {
+      min-width: 12px;
+    }
   }
 
   &__color-model {

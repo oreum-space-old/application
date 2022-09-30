@@ -6,6 +6,13 @@
     >
       User Interface
     </ui-h>
+    <div class="flex-row">
+      <ui-async-status model-value="initial" />
+      <ui-async-status model-value="invalid" />
+      <ui-async-status model-value="valid" />
+      <ui-async-status model-value="error" />
+      <ui-async-status model-value="sending" />
+    </div>
     <ui-view-typography />
     <ui-view-inputs />
     <ui-view-rich-text />
@@ -18,6 +25,7 @@
   setup
   lang="ts"
 >
+import UiAsyncStatus from '@/components/ui/UiAsyncStatus.vue'
 import UiH from '@/components/ui/UiH.vue'
 import UiViewButtons from '@views/ui/UiViewButtons.vue'
 import UiViewDialog from '@views/ui/UiViewDialog.vue'

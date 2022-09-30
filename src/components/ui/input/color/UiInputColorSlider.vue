@@ -114,7 +114,7 @@ function inputNumberHandler (event: Event) {
     box-shadow: inherit;
     transform-origin: center center;
     transform: rotate(45deg);
-    left: calc((var(--value) - 6px) * 1.0075 * (255 / var(--max)));
+    left: calc((var(--value) - 5px) * 1.0075 * (255 / var(--max)));
     z-index: 2;
   }
 

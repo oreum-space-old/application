@@ -18,6 +18,9 @@ export default class XhrPromise<Body, Response = unknown> {
           // TODO: refreshTokens
           return reject(new XhrReject('script'))
         }
+        if (this.status >= 400) {
+          reject(xhr.response)
+        }
         resolve(xhr.response)
       }
       xhr.onerror = () => reject(new XhrReject('script'))

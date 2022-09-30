@@ -43,7 +43,7 @@ router.beforeEach(() => {
     app = useApp()
   }
   if (app.menu === 'shown') {
-    app.menu = 'hidden'
+    app.setMenu('hidden')
   }
   if (dialog.openedDialogs.length) {
     dialog.hide()

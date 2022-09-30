@@ -18,7 +18,7 @@ export default defineConfig({
     }
   },
   server: {
-    port: 443,
+    port: 8443,
     https: {
       key: fs.readFileSync('./.cert/key.pem'),
       cert: fs.readFileSync('./.cert/cert.pem'),

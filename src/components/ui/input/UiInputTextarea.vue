@@ -6,7 +6,6 @@
       :class="{ 'ui-input_invalid': invalid }"
       placeholder=" "
       :disabled="disabled"
-      @scroll="scroll"
     />
     <label
       v-if="label"
@@ -42,12 +41,6 @@ const
     }
   }),
   disabled = computed<boolean>(() => typeof props.modelValue !== 'string' || !!props.disabled)
-
-function scroll (event: Event) {
-  const target = event.target as HTMLTextAreaElement
-  console.dir(target)
-}
-
 </script>
 
 <style
@@ -57,10 +50,24 @@ function scroll (event: Event) {
 .ui-input-textarea {
   line-height: 20px;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: red;
+  @media (hover: hover) {
+    &::-webkit-scrollbar {
+      display: unset;
+      width: 8px;
+      height: 1px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #FFFFFF20 content-box;
+      border-radius: 4px;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-corner {
+      display: none;
+      height: 1px;
+    }
   }
 }
 </style>
