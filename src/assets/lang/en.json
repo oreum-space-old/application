@@ -1,0 +1,18 @@
+{
+  "login": "Login",
+  "registration": "Registration",
+  "back": "Back",
+  "report-problem": "Report problem",
+  "button-continue": "Continue",
+  "field-username": "Username",
+  "field-email": "Email",
+  "field-password": "Password",
+  "page-home": "Home",
+  "page-welcome": "Welcome",
+  "page-control-panel": "Control Panel",
+  "page-console": "Console",
+  "page-user-interface": "User Interface",
+  "page-lost-title": "Looks like you are lost",
+  "page-lost-subtitle": "Requested resource is not available.",
+  "join-with-discord": "Join with Discord"
+}

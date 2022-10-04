@@ -29,6 +29,12 @@ p, span, code, pre {
   }
 }
 
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
 
 .a-header {
   padding-inline: 4px;

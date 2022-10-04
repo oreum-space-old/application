@@ -1,0 +1,18 @@
+{
+  "login": "Войти",
+  "registration": "Регистрация",
+  "back": "Назад",
+  "report-problem": "Сообщить о проблеме",
+  "button-continue": "Продолжить",
+  "field-username": "Никнейм",
+  "field-email": "Электронная почта",
+  "field-password": "Пароль",
+  "page-home": "Главная",
+  "page-welcome": "Welcome",
+  "page-control-panel": "Панель управления",
+  "page-console": "Консоль",
+  "page-user-interface": "Пользовательский интерфейс",
+  "page-lost-title": "Похоже, ты потерялся",
+  "page-lost-subtitle": "Запрошенный ресурс недоступен.",
+  "join-with-discord": "Войти с помощью Discord"
+}

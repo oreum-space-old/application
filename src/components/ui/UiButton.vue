@@ -53,6 +53,10 @@ button,
   color: var(--primary-color-text);
   border-radius: 4px;
   font-size: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
   line-height: 20px;
   font-weight: 600;
   font-family: inherit;

@@ -20,9 +20,11 @@ html {
   --header-height: 64px;
   color: var(--text-color);
 
+  &.scrollbar-prevent-scrolling,
   &.menu-prevent-scrolling,
   &.dialog-prevent-scrolling {
-    overflow-y: hidden;
+    scroll-behavior: auto;
+    overflow: hidden;
   }
 }
 
@@ -95,10 +97,11 @@ body {
 .footer {
   margin-top: auto;
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
   justify-content: space-between;
   padding-block: 12px;
   min-height: 64px;
+  gap: 12px;
 }
 
 @media (max-width: 768px) {

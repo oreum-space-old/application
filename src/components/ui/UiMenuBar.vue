@@ -28,7 +28,7 @@
           v-if="item.icon"
           :icon="item.icon"
         />
-        {{ item.text }}
+        {{ l(item.text) }}
       </router-link>
       <a
         v-else-if="item.action"
@@ -40,7 +40,7 @@
           v-if="item.icon"
           :icon="item.icon"
         />
-        {{ item.text }}
+        {{ l(item.text) }}
       </a>
       <a
         v-else-if="item.link"
@@ -52,7 +52,7 @@
           v-if="item.icon"
           :icon="item.icon"
         />
-        {{ item.text }}
+        {{ l(item.text) }}
       </a>
       <template v-else-if="item.items">
         <a
@@ -66,7 +66,7 @@
             v-if="item.icon"
             :icon="item.icon"
           />
-          {{ item.text }}
+          {{ l(item.text) }}
           <ui-icon
             v-if="!item.arrowHidden"
             icon="dropdown-arrow"
@@ -90,6 +90,7 @@
   lang="ts"
 >
 import UiIcon from '@/components/ui/UiIcon.vue'
+import useLang from '@/stores/lang'
 import { ref } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
@@ -133,7 +134,8 @@ const props = defineProps<{
     (e: 'collapse'): void
   }>(),
   root = ref<HTMLUListElement>(),
-  opened = ref<number>(NaN)
+  opened = ref<number>(NaN),
+  { l } = useLang()
 
 function collapse () {
   emits('collapse')

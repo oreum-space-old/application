@@ -23,6 +23,19 @@ type ValidateEmailResponse = {
   taken: boolean
 }
 
+type RegistrationRequestBody = {
+  username: string,
+  email: string,
+  password: string
+}
+
+type RegistrationResponse = {
+  id: string
+  username: string
+  online: Date
+  avatar?: string
+}
+
 export default {
   refreshTokens (body: Tokens) {
     return http.post<string, Tokens>('/api/user/refresh', body)
@@ -32,5 +45,11 @@ export default {
   },
   validateEmail (email: string) {
     return http.post<ValidateEmailResponse, ValidateEmailRequestBody>('/api/user/validate/email', { email })
+  },
+  registration (username: string, email: string, password: string) {
+    return http.post<RegistrationResponse, RegistrationRequestBody>(
+      '/api/user/registration',
+      { username, email, password }
+    )
   }
 }

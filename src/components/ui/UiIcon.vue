@@ -2,17 +2,12 @@
   <svg
     class="ui-icon"
     :class="classes"
-    :tabindex="button && '0'"
-    :role="button && 'button'"
     :width="width"
     :height="height"
     :style="{
       rotate: rotate && `${rotate}deg`
     }"
     xmlns="http://www.w3.org/2000/svg"
-    @click="keydown"
-    @keydown.enter.space="keydown"
-    @keyup.enter.space="keyup"
   >
     <use
       :href="`${icons}#${icon}`"
@@ -32,7 +27,6 @@ export interface UiIconProps {
   height?: number
   icon: string
   rotate?: string
-  button?: true
 }
 
 const
@@ -46,20 +40,6 @@ const
   classes = {
     'ui-icon_button': props.button,
     'ui-icon_active': isRef(active) && active.value
-  },
-  emits = defineEmits<{ (e: 'click'): void }>()
-
-function keydown () {
-  if (isRef(active)) {
-    active.value = true
-    emits('click')
   }
-}
-
-function keyup () {
-  if (isRef(active)) {
-    active.value = false
-  }
-}
 
 </script>

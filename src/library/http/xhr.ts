@@ -1,6 +1,7 @@
 import env from '@/env'
 import type { Method } from '@/library/http'
 import XhrPromise from '@/library/http/xhrPromise'
+import useLang from '@/stores/lang'
 import type Url from '@/types/url'
 import type { LocationQueryRaw } from 'vue-router'
 import query from '@/library/query'
@@ -20,6 +21,14 @@ type XhrOptions = {
 
 const _JSON = 'json'
 
+function createUrl (url: Url, query?: string): Url {
+  const result = query ? `${url}?${query}` : url
+  if (!url.startsWith('https://')) {
+    return `${document.location.origin.slice(0, -document.location.port.length)}${result}` as Url
+  }
+  return query ? `${url}?${query}` : url
+}
+
 export default class Xhr<Body, Response = unknown> extends XMLHttpRequest {
   readonly _options?: XhrOptions
   readonly query?: string
@@ -33,7 +42,7 @@ export default class Xhr<Body, Response = unknown> extends XMLHttpRequest {
     body && (this.body = body)
     options && (this._options = options)
     this.method = method
-    this.url = this.query ? `${url}?${this.query}` : url
+    this.url = createUrl(url, this.query)
     this.create(this.method, this.url, this._options)
   }
 
@@ -57,6 +66,8 @@ export default class Xhr<Body, Response = unknown> extends XMLHttpRequest {
     if (this.responseType === _JSON) {
       this.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
     }
+
+    this.setRequestHeader('Accept-Language', useLang().lang.id)
 
     if (options) {
       const { timeout, requestHeaders, withCredentials } = options

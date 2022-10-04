@@ -20,9 +20,8 @@
                 {{ title }}
               </h4>
             </slot>
-            <ui-icon
+            <ui-icon-button
               icon="close-small"
-              button
               @click="close"
             />
           </slot>
@@ -57,7 +56,7 @@
   lang="ts"
 >
 import UiButton from '@/components/ui/UiButton.vue'
-import UiIcon from '@/components/ui/UiIcon.vue'
+import UiIconButton from '@/components/ui/UiIconButton.vue'
 import useDialog from '@/stores/dialog'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 

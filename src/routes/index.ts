@@ -6,7 +6,12 @@ import app from './app'
 const routes: Array<RouteRecordRaw> = [
   ...app,
   ...ui,
-  ...dashboard
+  ...dashboard,
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/AppPathNotFound.vue'),
+    meta: { main: true }
+  }
 ]
 
 export default routes

@@ -12,6 +12,11 @@
       <ui-async-status model-value="valid" />
       <ui-async-status model-value="error" />
       <ui-async-status model-value="sending" />
+      <ui-flag flag="ru" />
+      <ui-flag flag="ua" />
+      <ui-flag flag="ca" />
+      <ui-flag flag="hu" />
+      <ui-flag flag="cz" />
     </div>
     <ui-view-typography />
     <ui-view-inputs />
@@ -26,6 +31,7 @@
   lang="ts"
 >
 import UiAsyncStatus from '@/components/ui/UiAsyncStatus.vue'
+import UiFlag from '@/components/ui/UiFlag.vue'
 import UiH from '@/components/ui/UiH.vue'
 import UiViewButtons from '@views/ui/UiViewButtons.vue'
 import UiViewDialog from '@views/ui/UiViewDialog.vue'

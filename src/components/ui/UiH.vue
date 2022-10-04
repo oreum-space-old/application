@@ -30,6 +30,7 @@ type Props = {
   id?: string
   level?: Level
 }
+
 const
   props = defineProps<Props>(),
   computedLevel = computed<`${Level}`>(() => `${props.level || 3}`),

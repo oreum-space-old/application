@@ -1,4 +1,5 @@
 import useDialog from '@/stores/dialog'
+import useLang from '@/stores/lang'
 import { defineStore } from 'pinia'
 import Favicon from '@/library/favicon'
 
@@ -38,11 +39,15 @@ const useApp = defineStore('app', {
     favicon
   }),
   actions: {
+    async load () {
+      const lang = useLang()
+
+      await lang.loadLangs()
+      await lang.loadLang()
+      this.created()
+    },
     created (): void {
       addEventListener('resize', this.resizeHandler)
-      addEventListener('jump', (event) => {
-        console.log(event)
-      })
       this.resizeMenuHandler()
       this.resizeCssHandler()
       this.watchThemeFromMedia()

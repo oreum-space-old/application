@@ -12,6 +12,12 @@ const app: Array<RouteRecordRaw> = [
     path: '/home',
     component: () => import('@/views/HomeView.vue'),
     meta: { main: true }
+  },
+  {
+    name: 'Registration',
+    path: '/registration',
+    component: () => import('@/views/RegistrationView.vue'),
+    meta: { main: true }
   }
 ]
 

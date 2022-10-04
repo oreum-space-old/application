@@ -2,51 +2,31 @@
 
 export default [
   {
-    text: 'Главная',
+    text: 'page-home',
     icon: 'home',
     to: { name: 'Home' }
   },
-  // {
-  //   text: 'Серверы',
-  //   icon: 'servers',
-  //   items: [
-  //     {
-  //       text: '-',
-  //       action: WIP
-  //     }
-  //   ]
-  // },
-  // {
-  //   text: 'Правила',
-  //   icon: 'rules',
-  //   action: WIP
-  // },
-  // {
-  //   text: 'Форум',
-  //   icon: 'forum',
-  //   action: WIP
-  // },
   {
     text: '',
     icon: 'develop',
     items: [
       {
-        text: 'Welcome',
+        text: 'page-welcome',
         icon: 'pinned-page',
         to: { name: 'Welcome' }
       },
       {
-        text: 'Панель управления',
+        text: 'page-control-panel',
         icon: 'dashboard',
         to: { name: 'Dashboard' }
       },
       {
-        text: 'Консоль',
+        text: 'page-console',
         icon: 'console',
         to: { name: 'Dashboard Terminal' }
       },
       {
-        text: 'User Interface',
+        text: 'page-user-interface',
         icon: 'pinned-page',
         to: { name: 'User Interfaces' }
       }

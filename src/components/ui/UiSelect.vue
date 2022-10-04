@@ -7,7 +7,6 @@
       'ui-select_open': visible,
       'ui-select_value': !!modelValue
     }"
-    :style="{ '--item-height': itemHeight ? `${itemHeight}px` : undefined }"
     @focusout="focusout"
   >
     <div
@@ -86,7 +85,6 @@ type Props = {
   options: Array<UiSelectValue>
   modelValue: UiSelectValue | null
   label?: string
-  itemHeight?: number
 }
 
 const
@@ -140,7 +138,7 @@ function updateModelValue (value: UiSelectValue | number) {
     if (list.value) {
       const index = props.options.findIndex((_) => modelValue.value === _.value)
 
-      list.value.scrollTo({ top: (index - 1) * (props.itemHeight || 36) })
+      list.value.scrollTo({ top: (index - 1) * (36) })
     }
   }
 }
@@ -312,6 +310,22 @@ function focusout (event: FocusEvent) {
 
     &_has {
       opacity: 1;
+    }
+  }
+}
+
+.ui-select.small {
+  --item-height: 24px;
+
+  .ui-select {
+    &__input {
+      font-size: 14px;
+      line-height: 16px;
+      min-height: 32px;
+      padding-block: 4px;
+    }
+    &__arrow {
+      top: 4px;
     }
   }
 }

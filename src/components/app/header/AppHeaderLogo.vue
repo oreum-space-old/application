@@ -1,10 +1,8 @@
 <template>
   <section class="app-header-logo">
     <router-link to="/">
-      <svg>
+      <svg width="192">
         <use
-          width="192"
-          height=""
           :href="`${oreumLogo}#svg`"
           color="var(--surface-900)"
         />

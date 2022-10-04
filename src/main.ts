@@ -1,15 +1,19 @@
+import './styles/index.scss'
 import globalListeners from '@/library/globalListeners'
-import icons from '@/library/icons'
 import { createApp } from 'vue'
 import router from './router'
 import pinia from './stores'
 import App from './App.vue'
-import './styles/index.scss'
 
 createApp(App)
   .use(pinia)
-  .use(icons)
   .use(router)
   .use(globalListeners)
   .mount('body')
+
+if (!import.meta.env.DEV) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  import('https://accounts.google.com/gsi/client')
+}
 

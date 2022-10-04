@@ -3,7 +3,7 @@
     <input
       ref="input"
       v-model="model"
-      :type="type || 'text'"
+      :type="showPassword || type || 'text'"
       class="ui-input ui-input-text__input"
       :class="{ 'ui-input_invalid': invalid }"
       placeholder=" "
@@ -27,6 +27,13 @@
       :focused="focused"
       :input="input"
     />
+    <ui-icon-button
+      v-if="type === 'password'"
+      :tabindex="undefined"
+      class="ui-input-text__show-password ui-input-icon"
+      :icon="showPassword ? 'eye-hide' : 'eye-show'"
+      @click="showPassword = showPassword ? '' : 'text'"
+    />
   </label>
 </template>
 
@@ -34,6 +41,7 @@
   setup
   lang="ts"
 >
+import UiIconButton from '@/components/ui/UiIconButton.vue'
 import { computed, ref } from 'vue'
 
 const
@@ -60,7 +68,8 @@ const
   computedDisabled = computed<boolean>(() =>
     typeof props.modelValue !== 'string' || !!props.disabled),
   input = ref<HTMLInputElement>(),
-  focused = ref<boolean>(false)
+  focused = ref<boolean>(false),
+  showPassword = props.type ? ref<'text' | ''>('') : undefined
 
 function focus () {
   if (input.value) {

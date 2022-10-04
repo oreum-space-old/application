@@ -5,14 +5,14 @@
       appearance="outlined"
       :disabled="!!dialog.openedDialogs.length"
     >
-      Вход
+      {{ l`login` }}
     </ui-button>
     <ui-button
       seriousness="success"
       :disabled="!!dialog.openedDialogs.length"
-      @click="dialog.show('app-header-auth-registration')"
+      @click="router.push({ name: 'Registration' })"
     >
-      Регистрация
+      {{ l`registration` }}
     </ui-button>
   </div>
 </template>
@@ -23,8 +23,12 @@
 >
 import UiButton from '@/components/ui/UiButton.vue'
 import useDialog from '@/stores/dialog'
+import useLang from '@/stores/lang'
+import { useRouter } from 'vue-router'
 
 const dialog = useDialog()
+const { l } = useLang()
+const router = useRouter()
 </script>
 
 <style lang="scss">
