@@ -71,7 +71,13 @@
     </ui-input-text>
     <ui-button
       seriousness="success"
-      :disabled="emailAsyncStatus !== 'valid' || usernameAsyncStatus !== 'valid' || !!passwordErrors.length"
+      :disabled="
+        emailAsyncStatus !== 'valid'||
+          usernameAsyncStatus !== 'valid' ||
+          !!passwordErrors.length ||
+          !password.length
+      "
+      @click="registration"
     >
       {{ l`button-continue` }}
     </ui-button>
@@ -149,7 +155,7 @@ function preValidateUsername () {
 }
 
 function validateUsername () {
-  if (usernameAsyncStatus.value !== 'sending' && username.value) {
+  if (usernameAsyncStatus.value !== 'sending') {
     usernameErrors.value = []
     usernameAsyncStatus.value = 'sending'
     userService
@@ -183,7 +189,6 @@ function validateUsername () {
       })
     return
   }
-  usernameAsyncStatus.value = 'initial'
 }
 
 function preValidateEmail () {
@@ -203,7 +208,7 @@ function preValidateEmail () {
 }
 
 function validateEmail () {
-  if (emailAsyncStatus.value !== 'sending' && username.value) {
+  if (emailAsyncStatus.value !== 'sending') {
     emailErrors.value = []
     emailAsyncStatus.value = 'sending'
     userService
@@ -237,7 +242,6 @@ function validateEmail () {
       })
     return
   }
-  usernameAsyncStatus.value = 'initial'
 }
 
 function validatePassword () {
@@ -255,6 +259,24 @@ function validatePassword () {
     errors.push('password-invalid')
   }
   passwordErrors.value = errors
+}
+
+function registration () {
+  if (emailAsyncStatus.value !== 'valid' ||
+    usernameAsyncStatus.value !== 'valid' ||
+    !!passwordErrors.value.length ||
+    !password.value.length) {
+    return
+  }
+  userService
+    .registration(username.value, email.value, password.value)
+    .then((response) => {
+      console.log(response)
+      return response
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 }
 
 function inputUsernameFocus () {

@@ -69,6 +69,7 @@ textarea {
     pointer-events: none;
     transition-duration: 0.2s;
     color: var(--surface-border-a);
+    user-select: none;
   }
 
   &:not(:placeholder-shown) ~ &-label,

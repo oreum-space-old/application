@@ -18,6 +18,20 @@ const app: Array<RouteRecordRaw> = [
     path: '/registration',
     component: () => import('@/views/RegistrationView.vue'),
     meta: { main: true }
+  },
+  {
+    name: 'CodeActivation',
+    path: '/code-activation/:link',
+    component: () => import('@views/CodeActivationView.vue'),
+    props: true,
+    meta: { main: true }
+  },
+  {
+    name: 'LinkActivation',
+    path: '/link-activation/:link',
+    component: () => import('@views/LinkActivationView.vue'),
+    props: true,
+    meta: { main: true }
   }
 ]
 
